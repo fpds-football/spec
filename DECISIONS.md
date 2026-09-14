@@ -685,3 +685,22 @@ D-41 later reduced the published paths to the schema only.
 **Reason.** Clubs do not assess a player without video, so a submission without video links is not usable. The maintainer knows this from the industry, and a consultation cannot change the answer. `type` is a separate field, so that images or other media can become a new value later, as a minor version. `video_type` is required now, because a club treats highlights and a full match differently. If a later type such as `image` does not use `video_type`, that relaxation is also a minor version. `https` and the ban on user information stop producers from putting passwords in a document that parties forward. Links to platforms that need a login are permitted, because much professional video is on such platforms.
 
 **Alternatives considered.** Keep OQ-17 open and ship no media fields. Clubs then ask for video outside FPDS for every submission. A `videos` array without `type`. Images then need a second array. `type` with the values `highlights` and `full_match`. This mixes the kind of media with the content of a video. The first-draft `recorded_on` field. It is not necessary to open the video, so it goes to OQ-28. A list of permitted video hosts. Hosts change, and a list favours some platforms over others.
+
+### D-44. One consultation form with free-text answers
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- All consultations use one Tally form. The page sends the slug of the consultation in a hidden field.
+- The form asks for the role of the respondent, a free-text answer, the idea that is closest to their view, a name and an email address. Only the role and the answer are required. The form keeps the confirmation of age and of the privacy notice.
+- The role is a fixed list, so that each summary can count answers by role.
+- The closest idea uses the letters A to D, "None of these" and "Not sure". Each page shows what the letters mean.
+- The ideas on a consultation page are suggestions, not a closed list of options.
+- The form does not ask for the country of the respondent.
+- This entry changes one part of D-25, which described a form with a fixed answer and an optional comment.
+
+**Reason.** The ideas on each page start the discussion. They are not the only possible answers, and a fixed list hides the answers that nobody proposed. One form is easier to maintain than one form for each consultation, and a new consultation needs no new form. A fixed role and an optional closest idea keep the counts that the summary publishes. Name and email address are optional, because some respondents do not answer a commercially sensitive question with their name.
+
+**Alternatives considered.** One form for each consultation, with a fixed answer. Each new consultation then needs a new form, and questions that are specific to one consultation are lost when the form is reused. A required name. It reduces answers to the wage and release clause questions. A free-text role. The summary then cannot count answers by role without manual work.
