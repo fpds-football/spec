@@ -1,0 +1,148 @@
+{
+  "description": "Submission block (SPEC section 4)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "two compatible purposes are accepted",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "an empty purposes array is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/purposes",
+          "value": []
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a repeated purpose is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/purposes",
+          "value": [
+            "loan",
+            "loan"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a purpose outside the vocabulary is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/purposes",
+          "value": [
+            "enquiry"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "free_agent_offer is no longer a purpose",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/purposes",
+          "value": [
+            "free_agent_offer"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "information_only on its own is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/purposes",
+          "value": [
+            "information_only"
+          ]
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "information_only with another purpose is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/purposes",
+          "value": [
+            "information_only",
+            "loan"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a single purpose string in place of the array is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/submission/purposes"
+        },
+        {
+          "op": "add",
+          "path": "/submission/purpose",
+          "value": "loan"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a missing sender is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/submission/sender"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a sender outside the vocabulary is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/sender",
+          "value": "club"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a submission time without a time zone is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/submitted_at",
+          "value": "2026-09-13T09:41:00"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a free-text note is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/submission/note",
+          "value": "Open to offers."
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "description": "Extensions (SPEC section 12)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "a key with a reverse-DNS prefix is accepted",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "a key without a prefix is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions/scouting_grade",
+          "value": "B+"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a prefix without a field name is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions/com.example",
+          "value": "B+"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a prefix with only one label is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions/example~1scouting_grade",
+          "value": "B+"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an uppercase prefix is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions/com.Example~1scouting_grade",
+          "value": "B+"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the reserved football.fpds prefix is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions/football.fpds~1scouting_grade",
+          "value": "B+"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a sub-domain of the reserved prefix is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions/football.fpds.uk~1gbe_points",
+          "value": 15
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a structured extension value is accepted",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions/uk.co.example~1eligibility",
+          "value": {
+            "gbe_points": 15
+          }
+        }
+      ],
+      "valid": true
+    }
+  ]
+}

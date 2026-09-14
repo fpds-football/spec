@@ -1,39 +1,40 @@
 # Changelog
 
-All notable changes to FPDS are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and FPDS uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This file records all important changes to FPDS. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). FPDS uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Version numbers describe the **spec**, not this repository. The `fpds_version` field in every submission states which version it was written against.
+Version numbers describe the **specification**, not this repository. The `fpds_version` field in each submission states the version that the submission uses.
 
-What counts as what:
+`DECISIONS.md` records the reasons for each change.
 
-- **Major** — removing a field, retyping a field, making an optional field required, or removing a value from an enum. Breaks existing producers.
-- **Minor** — adding an optional field, adding a value to an enum, relaxing a constraint. Existing documents remain valid.
-- **Patch** — corrections to prose, examples, or schema bugs where the schema did not match the stated intent of the spec.
+Each type of change has a version level:
+
+- **Major.** Remove a field, change the type of a field, make an optional field required, or remove a value from an enum. Existing producers stop working.
+- **Minor.** Add an optional field, add a value to an enum, or relax a constraint. Existing documents stay valid.
+- **Patch.** Correct the text, the examples, or the schema where the schema does not agree with the intention of the specification.
 
 ## [Unreleased]
 
-Nothing yet.
-
-## [0.1.0] - 2026-09-13
-
-First public draft. Nothing here is stable and breaking changes are expected before 1.0.
+The first public draft, version 0.1.0. It is not stable. Breaking changes are expected before version 1.0.
 
 ### Added
 
-- Player submission document with thirteen top-level members, seven of them required
-- Position taxonomy distinguishing `DM`, `CM` and `AM`
-- Contract block with conditional requirements: `expiry_date` required when under contract or on loan, `parent_club` required when on loan
-- Representation block carrying `mandate_status`, so a submission states whether the sender holds authority to make it
-- Performance records requiring `minutes` alongside any output figure
-- Claim-level `provenance` keyed by JSON Pointer, with `verified` requiring a `verified_against` value
-- Money as integer minor units with an ISO 4217 currency code
-- `medical` restricted to availability status, with diagnoses and injury history explicitly out of scope
-- `consent` block with `subject_is_minor` derived from date of birth
-- Namespaced `extensions` object, which consumers must ignore when unrecognised
+- A player submission document with ten top-level members. Six members are required, and `representation` is required when the sender is an intermediary.
+- A `submission` block with `submission_id`, `submitted_at`, `purposes` and `sender`.
+- `purposes`, an array that states one or more types of deal. `information_only` cannot occur with another value.
+- `sender`, with the values `intermediary` and `player`. A player can send their own profile. A minor cannot.
+- Sixteen position codes that separate `CDM`, `CM` and `CAM`, with `LCB` and `RCB` for centre-backs who play on one side.
+- Five contract statuses with FIFA definitions: `under_contract`, `on_loan`, `amateur`, `free_agent` and `unknown`. Each status states which of `current_club`, `expiry_date` and `parent_club` are present.
+- A `representation` block with `mandate_status`, so that a submission states whether the sender has authority to make it.
+- Season records that require `minutes`, with `goals`, `assists` and `clean_sheets`. Seasons use `YYYY/YY` or `YYYY`.
+- A `consent` block with `lawful_basis`, `consent_date` and `is_minor`. A minor is a person less than 18 years old.
+- Provenance for each claim, with keys that are JSON Pointers. The source `verified` requires `verified_against`. A value without an entry has the sender as its source.
+- An `extensions` object with keys that have a reverse-DNS prefix. The `football.fpds` prefix is reserved.
+- A pattern on each date and timestamp field, so that validators reject local date formats.
+- A list in §13.1 of the rules that implementations enforce because the schema cannot.
+- A conformance suite in `tests/conformance/`.
 
 ### Known open questions
 
-Five unresolved questions are listed in §14 of `SPEC.md`. The wage and salary question is the most commercially loaded and the most likely to change the shape of 0.2.
+§14 of `SPEC.md` lists 23 open questions. Three consultations are open at launch: wages (OQ-2), release clauses and sell-on percentages (OQ-14), and medical availability (OQ-15).
 
-[Unreleased]: https://github.com/fpds-football/spec/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/fpds-football/spec/releases/tag/v0.1.0
+[Unreleased]: https://github.com/fpds-football/spec/commits/main

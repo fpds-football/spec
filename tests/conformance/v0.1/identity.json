@@ -1,5 +1,5 @@
 {
-  "description": "Identity and external identifiers (SPEC section 4)",
+  "description": "Identity and dates (SPEC section 5)",
   "schema": "schema/v0.1/player.json",
   "base": "examples/valid/midfielder-under-contract.json",
   "tests": [
@@ -28,6 +28,20 @@
       "valid": false
     },
     {
+      "description": "a repeated nationality is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/nationalities",
+          "value": [
+            "POL",
+            "POL"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
       "description": "a date of birth in day-first format is rejected",
       "patch": [
         {
@@ -39,23 +53,23 @@
       "valid": false
     },
     {
-      "description": "an unrecognised external identifier key is rejected",
+      "description": "a date of birth without separators is rejected",
       "patch": [
         {
-          "op": "add",
-          "path": "/player/external_ids/sofascore_id",
-          "value": "88213"
+          "op": "replace",
+          "path": "/player/date_of_birth",
+          "value": "20030417"
         }
       ],
       "valid": false
     },
     {
-      "description": "an implausible height is rejected",
+      "description": "a date of birth that does not exist is rejected",
       "patch": [
         {
           "op": "replace",
-          "path": "/player/height_cm",
-          "value": 18
+          "path": "/player/date_of_birth",
+          "value": "2003-02-30"
         }
       ],
       "valid": false
@@ -67,6 +81,41 @@
           "op": "replace",
           "path": "/player/full_name",
           "value": ""
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a vendor identifier is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/player/external_ids/transfermarkt_id",
+          "value": "612344"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a field removed from the first draft is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/player/height_cm",
+          "value": 183
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a club without a country is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/current_club",
+          "value": {
+            "name": "Widzew Lodz"
+          }
         }
       ],
       "valid": false

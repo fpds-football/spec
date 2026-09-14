@@ -3,22 +3,20 @@
   "submission": {
     "submission_id": "9c41b7de-2f10-4c6d-b0a1-77e3f9a4d215",
     "submitted_at": "2026-09-14T08:15:00Z",
-    "purpose": "loan",
-    "note": "Parent club will consider a second loan spell for the remainder of the season. No wage contribution available."
+    "purposes": [
+      "loan"
+    ],
+    "sender": "intermediary"
   },
   "player": {
     "full_name": "Mateo Silva Ferreira",
-    "known_as": "Mateo Silva",
     "date_of_birth": "2004-01-29",
     "nationalities": [
       "PRT"
     ],
-    "preferred_foot": "left",
-    "height_cm": 191,
     "current_club": {
       "name": "Estoril Praia",
-      "country": "PRT",
-      "competition": "Liga Portugal 2"
+      "country": "PRT"
     }
   },
   "positions": {
@@ -34,42 +32,28 @@
   },
   "representation": {
     "agent_name": "Joao Cardoso",
-    "agency": "Atlantic Football Partners",
     "mandate_status": "club_mandate"
-  },
-  "availability": {
-    "available_for": [
-      "loan"
-    ],
-    "available_from": "2027-01-01",
-    "wage_contribution_expected": false
   },
   "performance": [
     {
       "season": "2025/26",
       "competition": "Liga Portugal 2",
       "competition_country": "PRT",
-      "competition_tier": 2,
       "appearances": 18,
-      "starts": 18,
       "minutes": 1620,
       "clean_sheets": 6
+    },
+    {
+      "season": "2024",
+      "competition": "OBOS-ligaen",
+      "competition_country": "NOR",
+      "appearances": 12,
+      "minutes": 1080,
+      "clean_sheets": 4
     }
   ],
-  "eligibility": {
-    "passports": [
-      "PRT"
-    ],
-    "work_permit_required": true,
-    "gbe_points": 8
-  },
-  "medical": {
-    "current_status": "managed_load",
-    "expected_return_date": "2026-10-05"
-  },
   "consent": {
     "lawful_basis": "legitimate_interest",
-    "consent_obtained": false,
-    "subject_is_minor": false
+    "is_minor": false
   }
 }

@@ -1,0 +1,90 @@
+{
+  "description": "Consent (SPEC section 10)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "consent with a consent date is accepted",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "a missing consent block is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/consent"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "consent without is_minor is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/consent/is_minor"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the first-draft name subject_is_minor is rejected",
+      "patch": [
+        {
+          "op": "move",
+          "from": "/consent/is_minor",
+          "path": "/consent/subject_is_minor"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "consent as the lawful basis without a consent date is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/consent/consent_date"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "another lawful basis without a consent date is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/consent/lawful_basis",
+          "value": "legitimate_interest"
+        },
+        {
+          "op": "remove",
+          "path": "/consent/consent_date"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "consent_obtained is no longer a field",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/consent/consent_obtained",
+          "value": true
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a lawful basis outside the vocabulary is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/consent/lawful_basis",
+          "value": "implied"
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

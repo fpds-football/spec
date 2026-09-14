@@ -31,6 +31,19 @@
       "valid": true
     },
     {
+      "description": "a player_stated claim is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/~1contract~1expiry_date",
+          "value": {
+            "source": "player_stated"
+          }
+        }
+      ],
+      "valid": true
+    },
+    {
       "description": "a provenance key that is not a JSON Pointer is rejected",
       "patch": [
         {
@@ -48,7 +61,7 @@
       "patch": [
         {
           "op": "replace",
-          "path": "/provenance/~1eligibility~1gbe_points",
+          "path": "/provenance/~1performance~10~1goals",
           "value": {
             "source": "probably_true"
           }
@@ -57,7 +70,18 @@
       "valid": false
     },
     {
-      "description": "an omitted provenance block is valid, and every claim defaults to agent_stated",
+      "description": "an assertion time in a local format is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/~1performance~10~1goals/asserted_at",
+          "value": "01/09/2026"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an omitted provenance block is valid",
       "patch": [
         {
           "op": "remove",

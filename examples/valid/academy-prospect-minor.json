@@ -3,8 +3,10 @@
   "submission": {
     "submission_id": "e51d0a3b-6c22-41f8-8d90-14b7c2e6f087",
     "submitted_at": "2026-09-14T16:40:00Z",
-    "purpose": "information_only",
-    "note": "Registration interest only. Any approach must go through the club's academy and the player's parents."
+    "purposes": [
+      "information_only"
+    ],
+    "sender": "intermediary"
   },
   "player": {
     "full_name": "Liam Grealy",
@@ -12,11 +14,9 @@
     "nationalities": [
       "IRL"
     ],
-    "preferred_foot": "right",
     "current_club": {
       "name": "St Kevin's Boys",
-      "country": "IRL",
-      "competition": "DDSL"
+      "country": "IRL"
     }
   },
   "positions": {
@@ -26,17 +26,17 @@
     ]
   },
   "contract": {
-    "status": "youth_scholarship"
+    "status": "amateur"
   },
   "representation": {
-    "agent_name": "Not represented",
-    "mandate_status": "none"
+    "agent_name": "Aoife Brennan",
+    "fifa_agent_licence": "IRL-2025-00417",
+    "mandate_status": "exclusive"
   },
   "consent": {
     "lawful_basis": "consent",
-    "consent_obtained": true,
     "consent_date": "2026-09-01",
-    "subject_is_minor": true
+    "is_minor": true
   },
   "provenance": {
     "/player/date_of_birth": {

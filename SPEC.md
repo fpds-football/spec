@@ -1,213 +1,333 @@
 # Football Player Data Standard (FPDS)
 
-**Version:** 0.1.0 (draft) **Date:** 2026-09-13 **Schema:** `https://fpds.football/schema/v0.1/player.json`
+**Version:** 0.1.0 (draft, not released) **Schema:** `https://fpds.football/schema/v0.1/player.json`
 
-The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119.
+In this document, the key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY have the meanings that RFC 2119 gives them. They have these meanings only when they are in capitals.
 
 ---
 
 ## 1. Scope
 
-FPDS defines the structure of a **player submission**: a single document describing one player, sent from one party to another for the purpose of a potential transfer, loan, trial or registration.
+FPDS defines the structure of a **player submission**. A player submission is one document about one player. One party sends it to another party about a possible permanent transfer, loan or trial.
 
-FPDS does not define transport, authentication, session handling or acknowledgement. It is a data standard, not a protocol.
+The sender is an intermediary or the player. §4 defines the two senders.
+
+FPDS does not define transport, authentication, sessions or acknowledgements. It is a data standard, not a protocol.
 
 ## 2. Design principles
 
-1. **Every number carries its denominator.** Output without minutes is not information.
-2. **Provenance is a first-class field, not metadata.** A submission states who claimed what and when.
-3. **Absence is explicit.** `null` with a stated reason beats a missing key.
-4. **Small core, open extensions.** Twenty fields in the core. Everything else goes in `extensions`.
-5. **Follow existing identifiers.** FIFA Connect where it exists. Do not mint new player IDs.
+1. **Every number has its denominator.** Output without minutes is not information.
+2. **Provenance is a field, not metadata.** A submission states who made each claim, and when.
+3. **Unknown is a value, not a gap.** A required field that can be unknown has the value `unknown`. A missing optional field means "not stated". `null` is not a value in FPDS.
+4. **The core is small, and extensions are open.** The core contains only the fields that FPDS cannot work without. New fields enter the core after public consultation.
+5. **FPDS uses existing identifiers and definitions.** It uses FIFA Connect identifiers and FIFA definitions where they exist. It does not issue new player identifiers.
 
 ## 3. Document structure
 
-A submission is a single JSON object with these top-level members:
+A submission is one JSON object with these members:
 
-|Member|Required|Description|
-|---|---|---|
-|`fpds_version`|yes|Semver string of the spec version used|
-|`submission`|yes|Who sent this, when, and why|
-|`player`|yes|Identity block|
-|`positions`|yes|Primary and secondary positions|
-|`contract`|yes|Current contractual situation|
-|`representation`|yes|Mandate and licensing|
-|`availability`|no|What is being offered and on what terms|
-|`performance`|no|Season-by-season record|
-|`eligibility`|no|Passports, permits, registration categories|
-|`medical`|no|Availability status only — see §9|
-|`media`|no|Video and report links|
-|`consent`|yes|Lawful basis for sharing this data|
-|`provenance`|no|Claim-level sourcing, keyed by JSON Pointer|
-|`extensions`|no|Implementation-specific additions|
-
-## 4. Identity
-
-### 4.1 `player`
-
-|Field|Type|Required|Notes|
+| Member | Required | Contents | Section |
 |---|---|---|---|
-|`full_name`|string|yes|As it appears on the passport|
-|`known_as`|string|no|Common or shirt name|
-|`date_of_birth`|date|yes|ISO 8601 `YYYY-MM-DD`|
-|`nationalities`|array of string|yes|ISO 3166-1 alpha-3, sporting nationality first|
-|`preferred_foot`|enum|no|`left`, `right`, `both`, `unknown`|
-|`height_cm`|integer|no||
-|`current_club`|object|yes|`name`, `country`, `competition`, `id`|
-|`external_ids`|object|no|See §4.2|
+| `fpds_version` | yes | The version of FPDS that the document uses | §3 |
+| `submission` | yes | The submission identifier, time, purposes and sender | §4 |
+| `player` | yes | The identity of the player | §5 |
+| `positions` | yes | The primary position and secondary positions | §6 |
+| `contract` | yes | The contract status of the player | §7 |
+| `representation` | when the sender is `intermediary` | The agent and the mandate | §8 |
+| `performance` | no | Season records | §9 |
+| `consent` | yes | The lawful basis for sharing the data | §10 |
+| `provenance` | no | The source of each claim | §11 |
+| `extensions` | no | Fields that are not in the core | §12 |
 
-### 4.2 Identifiers
+These rules apply to the full document:
 
-There is no universal player key in practice, so FPDS carries whatever is available:
+- `fpds_version` is a semantic version string. For this version of the schema, it MUST match `0.1.x`.
+- A document MUST NOT contain a member that this specification does not define, except inside `extensions`.
+- A document MUST NOT contain `null` as a value.
+- A date MUST use the format `YYYY-MM-DD` (ISO 8601). A timestamp MUST use the RFC 3339 format with a time zone, for example `2026-09-13T09:41:00Z`.
+- Producers MUST NOT put a local date format, such as `07/03/1998`, in a date field. Consumers SHOULD show dates in the local format of the reader.
+- A country code MUST be an ISO 3166-1 alpha-3 code in uppercase, for example `POL`.
 
-```json
-"external_ids": {
-  "fifa_connect_id": "1234567890",
-  "transfermarkt_id": "418560",
-  "wyscout_id": "351942",
-  "opta_id": "p123456"
-}
-```
+## 4. Submission
 
-`fifa_connect_id` SHOULD be populated where known. Consumers matching submissions against their own records SHOULD use the composite of `full_name`, `date_of_birth` and `nationalities` as a fallback key, with fuzzy matching on name.
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `submission_id` | string | yes | Unique for each sender. The receiver MUST NOT give it a meaning. |
+| `submitted_at` | timestamp | yes | The time that the sender made the submission. |
+| `purposes` | array of enum | yes | One or more of `permanent_transfer`, `loan`, `trial`, `information_only`. |
+| `sender` | enum | yes | `intermediary` or `player`. |
 
-Implementations MUST NOT treat `full_name` alone as identifying.
+### 4.1 Purposes
 
-## 5. Positions
+`purposes` MUST contain at least one value, and each value MUST occur only once. A player can be available for more than one type of deal, for example `["permanent_transfer", "loan"]`.
 
-`primary_position` is required and MUST be one of:
+`information_only` means that the sender does not offer the player for a deal. If `purposes` contains `information_only`, it MUST NOT contain another value.
 
-|Code|Meaning|
+### 4.2 Sender
+
+| Value | Meaning |
 |---|---|
-|`GK`|Goalkeeper|
-|`RB` / `LB`|Full-back|
-|`RWB` / `LWB`|Wing-back|
-|`CB`|Centre-back|
-|`DM`|Defensive midfielder — the 6|
-|`CM`|Central midfielder — the 8|
-|`AM`|Attacking midfielder — the 10|
-|`RM` / `LM`|Wide midfielder|
-|`RW` / `LW`|Winger|
-|`SS`|Second striker|
-|`ST`|Centre-forward|
+| `intermediary` | An agent or another party sends the submission for the player or for a club. |
+| `player` | The player sends their own submission. |
 
-`secondary_positions` is an array of the same codes.
+If `sender` is `intermediary`, the document MUST contain `representation`.
 
-The distinction between `DM`, `CM` and `AM` is the single most abused piece of information in player submissions and is deliberately non-optional. "Centre mid" is not a valid value.
+If `sender` is `player`, the document MAY contain `representation`. A player who has an agent can send their own profile and name the agent.
 
-## 6. Contract
+If `consent.is_minor` is `true`, `sender` MUST NOT be `player`. §10 gives the reason.
 
-|Field|Type|Notes|
-|---|---|---|
-|`status`|enum|`under_contract`, `free_agent`, `on_loan`, `youth_scholarship`, `unattached`, `unknown`|
-|`expiry_date`|date|Required when `status` is `under_contract` or `on_loan`|
-|`option_to_extend`|boolean||
-|`release_clause`|money object|`amount`, `currency`, `conditions`|
-|`sell_on_percentage`|number|0–100|
-|`parent_club`|object|Required when `status` is `on_loan`|
+## 5. Identity
 
-Money objects use ISO 4217 currency codes and integer minor units, to avoid float rounding:
-
-```json
-{ "amount": 250000000, "currency": "GBP" }
-```
-
-That is £2,500,000.
-
-## 7. Representation
-
-|Field|Type|Required|Notes|
+| Field | Type | Required | Notes |
 |---|---|---|---|
-|`agent_name`|string|yes||
-|`agency`|string|no||
-|`fifa_agent_licence`|string|no|Licence number where held|
-|`mandate_status`|enum|yes|`exclusive`, `non_exclusive`, `club_mandate`, `none`, `unknown`|
-|`mandate_expiry`|date|no||
+| `full_name` | string | yes | The name as it appears on the passport. |
+| `date_of_birth` | date | yes | |
+| `nationalities` | array of country codes | yes | At least one. Sporting nationality first. Each value occurs only once. |
+| `current_club` | club | see §7 | The club where the player plays now. |
+| `external_ids.fifa_connect_id` | string | no | The FIFA Connect identifier of the player. |
 
-`mandate_status` of `unknown` is permitted, but consumers SHOULD treat submissions with `none` or `unknown` differently from mandated ones. A large share of wasted recruitment time comes from submissions by parties with no authority to make them.
+A club has two required fields: `name` and `country`.
 
-## 8. Performance
+`fifa_connect_id` SHOULD be present when the sender knows it.
 
-An array of season records. Each record:
+There is no universal player identifier in practice. A consumer that matches a submission against its own records SHOULD use `full_name`, `date_of_birth` and `nationalities` together as a fallback key. The consumer SHOULD use fuzzy matching on the name. An implementation MUST NOT use `full_name` alone to identify a player.
 
-|Field|Type|Required|
+## 6. Positions
+
+| Field | Type | Required |
 |---|---|---|
-|`season`|string (`2025/26`)|yes|
-|`competition`|string|yes|
-|`competition_country`|string (alpha-3)|yes|
-|`competition_tier`|integer|no|
-|`appearances`|integer|yes|
-|`starts`|integer|no|
-|`minutes`|integer|**yes**|
-|`goals`|integer|no|
-|`assists`|integer|no|
+| `primary_position` | position code | yes |
+| `secondary_positions` | array of position codes | no. Maximum four, and each code occurs only once. |
 
-`minutes` is required whenever any output figure is present. A record stating `goals` without `minutes` is invalid.
+A position code MUST be one of these values. Codes are uppercase.
 
-Per-90 figures MUST NOT be included as stored fields. They are derived, and storing them invites inconsistency between the derived value and its inputs.
+| Code | Meaning |
+|---|---|
+| `GK` | Goalkeeper |
+| `RB` / `LB` | Right-back / left-back |
+| `RWB` / `LWB` | Right wing-back / left wing-back |
+| `CB` | Centre-back who plays on the left and on the right |
+| `LCB` / `RCB` | Centre-back who plays on the left only / on the right only |
+| `CDM` | Defensive midfielder (the 6) |
+| `CM` | Central midfielder (the 8) |
+| `CAM` | Attacking midfielder (the 10) |
+| `RM` / `LM` | Right midfielder / left midfielder, in a line of four or five |
+| `RW` / `LW` | Right winger / left winger |
+| `ST` | Striker |
 
-## 9. Medical
+A centre-back who plays on the two sides is `CB`. The sender MUST NOT describe this player as `LCB` with `RCB` as a secondary position.
 
-FPDS carries **availability status only**:
+Player submissions often misuse the difference between `CDM`, `CM` and `CAM`. FPDS makes this difference mandatory. "Centre mid" is not a valid value.
 
-- `current_status`: `available`, `unavailable`, `managed_load`, `unknown`
-- `expected_return_date`: date
+## 7. Contract
 
-Diagnoses, injury history and medical records are out of scope. In most jurisdictions this is health data attracting a higher standard of protection, and it does not belong in a document forwarded between parties. Where it must be exchanged, it should travel under a separate, consented process.
+| Field | Type | Notes |
+|---|---|---|
+| `status` | enum | Required. See §7.1. |
+| `expiry_date` | date | See §7.2. |
+| `parent_club` | club | See §7.2. |
+
+### 7.1 Status
+
+The words "professional" and "amateur" have the meanings in Article 2 of the FIFA Regulations on the Status and Transfer of Players. A professional has a written contract and receives more than their expenses. All other players are amateurs.
+
+| Value | Meaning |
+|---|---|
+| `under_contract` | A professional with a contract at `current_club`. |
+| `on_loan` | A professional with a contract at `parent_club`, who plays for `current_club` on loan. |
+| `amateur` | A player who is registered with a club and is not a professional. Academy players who are not professionals are `amateur`. |
+| `free_agent` | A player who is not registered with any club. |
+| `unknown` | The sender does not know the contract status. |
+
+### 7.2 Fields for each status
+
+| `status` | `player.current_club` | `expiry_date` | `parent_club` |
+|---|---|---|---|
+| `under_contract` | MUST be present | MUST be present | MUST NOT be present |
+| `on_loan` | MUST be present | MUST be present | MUST be present |
+| `amateur` | MUST be present | MUST NOT be present | MUST NOT be present |
+| `free_agent` | MUST NOT be present | MUST NOT be present | MUST NOT be present |
+| `unknown` | MAY be present | MUST NOT be present | MUST NOT be present |
+
+For `under_contract`, `expiry_date` is the end date of the contract at `current_club`. For `on_loan`, `expiry_date` is the end date of the contract at `parent_club`. `parent_club` is the club that holds the registration of the player.
+
+## 8. Representation
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `agent_name` | string | yes | The name of the agent. |
+| `fifa_agent_licence` | string | no | The FIFA licence number of the agent, if the agent has one. |
+| `mandate_status` | enum | yes | `exclusive`, `non_exclusive`, `club_mandate`, `none`, `unknown`. |
+
+§4.2 states when `representation` is required.
+
+| `mandate_status` | Meaning |
+|---|---|
+| `exclusive` | The agent has an exclusive mandate from the player. |
+| `non_exclusive` | The agent has a mandate from the player, and other agents can also have one. |
+| `club_mandate` | The agent acts for a club, not for the player. |
+| `none` | The agent has no mandate. |
+| `unknown` | The sender does not state the mandate. |
+
+Consumers SHOULD process submissions with `none` or `unknown` differently from submissions with a mandate. Recruitment departments lose much time on submissions from parties that have no authority to make them.
+
+## 9. Performance
+
+`performance` is an array of season records. Each record has these fields:
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `season` | string | yes | See §9.1. |
+| `competition` | string | yes | The name of the competition. |
+| `competition_country` | country code | yes | |
+| `appearances` | integer | yes | Zero or more. |
+| `minutes` | integer | yes | Zero or more. |
+| `goals` | integer | no | Zero or more. |
+| `assists` | integer | no | Zero or more. |
+| `clean_sheets` | integer | no | Zero or more. See §9.2. |
+
+`minutes` is required in every record. Output without minutes is not information.
+
+A record MUST NOT contain per-90 figures. Consumers calculate them from `minutes` and the output. If a document contains both the figure and its inputs, the two can disagree.
+
+A missing output field means "not stated". It does not mean zero.
+
+### 9.1 Season
+
+`season` has one of two formats:
+
+| Format | Use | Example |
+|---|---|---|
+| `YYYY/YY` | A season that crosses two calendar years | `2025/26` |
+| `YYYY` | A season in one calendar year | `2026` |
+
+The separator is a slash. In the `YYYY/YY` format, the second part MUST be the year after the first part.
+
+### 9.2 Clean sheets
+
+`clean_sheets` is the number of appearances in which the team of the player conceded no goals while the player was on the pitch. It applies to all positions.
 
 ## 10. Consent and minors
 
-|Field|Type|Required|
-|---|---|---|
-|`lawful_basis`|enum|yes|
-|`consent_obtained`|boolean|yes|
-|`consent_date`|date|no|
-|`subject_is_minor`|boolean|yes|
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `lawful_basis` | enum | yes | `consent`, `contract`, `legitimate_interest`, `legal_obligation`, `not_stated`. |
+| `consent_date` | date | when `lawful_basis` is `consent` | The date that the data subject gave consent. |
+| `is_minor` | boolean | yes | See §10.1. |
 
-`subject_is_minor` MUST be computed from `date_of_birth` against the date of submission and MUST NOT be asserted independently.
+The values of `lawful_basis` agree with the lawful bases in Article 6 of the GDPR. A producer in another jurisdiction uses the value that is nearest to its own law. `not_stated` means that the sender does not state a lawful basis.
 
-Submissions concerning minors are subject to FIFA regulations on the protection of minors and to national safeguarding rules. FPDS does not attempt to encode those rules. Implementations handling minors' data should take their own legal advice; the flag exists so that systems can route these submissions differently rather than treat them as routine.
+### 10.1 Minors
+
+A minor is a person who is less than 18 years old. This agrees with Article 19 of the FIFA Regulations on the Status and Transfer of Players.
+
+`is_minor` MUST be `true` if the player is less than 18 years old on the date of `submission.submitted_at`. Otherwise it MUST be `false`. The producer MUST calculate `is_minor` from `player.date_of_birth`. The producer MUST NOT set it independently.
+
+A minor MUST NOT send their own submission, so `sender` MUST NOT be `player` when `is_minor` is `true`. Profiles of minors that go directly to clubs are a safeguarding risk.
+
+FIFA regulations on the protection of minors and national safeguarding rules apply to submissions about minors. FPDS does not encode those rules. Implementations that process data about minors need their own legal advice. The `is_minor` flag lets systems send these submissions through a different process.
 
 ## 11. Provenance
 
-`provenance` is an object whose keys are JSON Pointers (RFC 6901) into the same document, and whose values are:
+`provenance` is an object. Each key is a JSON Pointer (RFC 6901) to a value in the same document. Each value is an object with these fields:
 
-|Field|Type|Notes|
-|---|---|---|
-|`source`|enum|`verified`, `third_party_data`, `club_stated`, `agent_stated`, `estimated`, `unknown`|
-|`asserted_by`|string|Party or provider|
-|`asserted_at`|timestamp|ISO 8601|
-|`verified_against`|string|Required when `source` is `verified`|
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `source` | enum | yes | See the table below. |
+| `asserted_by` | string | no | The party or data provider that made the claim. |
+| `asserted_at` | timestamp | no | The time of the claim. |
+| `verified_against` | string | when `source` is `verified` | The record that the claim was checked against. |
 
-Any value with no corresponding provenance entry is treated as `agent_stated`. This keeps the burden low: an agent typing a submission by hand need write no provenance at all, and the document is still honest about what it is.
+| `source` | Meaning |
+|---|---|
+| `verified` | Somebody checked the claim against an official record. |
+| `third_party_data` | A data provider supplied the value. |
+| `club_stated` | A club stated the value. |
+| `agent_stated` | An agent stated the value. |
+| `player_stated` | The player stated the value. |
+| `estimated` | The value is an estimate. |
+| `unknown` | The source is not known. |
 
-Consumers SHOULD render sourcing visibly. Presenting a verified figure and an unverified one identically defeats the purpose of the format.
+### 11.1 Rules
+
+- Each key MUST resolve to a value in the same document.
+- An entry applies to the value at its pointer and to all values below that pointer. If a more specific entry exists, the more specific entry applies.
+- If a value has no entry, its source is the sender. The source is `agent_stated` when `sender` is `intermediary`, and `player_stated` when `sender` is `player`.
+- `asserted_by` is free text for display. It does not identify a party.
+- Provenance records who made a claim. It is not authentication, and it does not prove that the named party sent the document.
+
+A sender who types a submission by hand does not need to write provenance. The document is still correct about what it is.
+
+Consumers SHOULD show the source of each value. If a consumer shows a verified value and an unverified value in the same way, provenance has no purpose.
 
 ## 12. Extensions
 
-`extensions` is a free-form object. Keys SHOULD be namespaced by a reverse-DNS prefix to avoid collisions:
+`extensions` is an object for fields that are not in the core.
+
+- Each key MUST have the format `<reverse domain name>/<field name>`, for example `com.example/scouting_grade`.
+- The reverse domain name MUST have two or more labels. Each label contains only lowercase letters, digits and hyphens, and does not start or end with a hyphen.
+- The field name MUST start with a lowercase letter. It contains only lowercase letters, digits and underscores.
+- The domain name SHOULD be a domain that the producer controls.
+- A key MUST NOT start with the reserved prefix `football.fpds`.
+- `extensions` MUST NOT contain diagnoses, injury details or medical history. A value that states only whether a player is available is permitted.
+- Consumers MUST ignore extension keys that they do not recognise.
+
+This example shows two producers with fields of the same name:
 
 ```json
 "extensions": {
-  "football.fpds.example/scouting_grade": "B+",
-  "com.exampleclub/internal_ref": "SCT-2026-118"
+  "com.example/scouting_grade": "B+",
+  "uk.co.example/eligibility": { "gbe_points": 15 }
 }
 ```
 
-Consumers MUST ignore extensions they do not recognise. Fields that prove broadly useful are candidates for promotion into the core in a later minor version.
+A field that many independent producers use is a candidate for the core. §14 and `GOVERNANCE.md` describe how a field enters the core.
 
 ## 13. Conformance
 
-A **conforming producer** emits documents that validate against the published schema for the version stated in `fpds_version`.
+A **conforming producer** makes documents that are valid against the published schema for the version in `fpds_version`, and that obey the rules in §13.1.
 
-A **conforming consumer** accepts any valid document for a version it supports, ignores unrecognised extension keys, and does not reject a document solely for containing optional fields it does not use.
+A **conforming consumer** accepts all valid documents for the versions that it supports. It ignores extension keys that it does not recognise. It does not reject a document only because the document contains optional fields that the consumer does not use.
 
-## 14. Open questions for v0.2
+A validator MUST treat the `format` keywords `date` and `date-time` in the schema as assertions, not only as annotations. The conformance suite in `tests/conformance/` makes this assumption.
 
-These are unresolved and feedback is specifically wanted:
+### 13.1 Rules that the schema cannot enforce
 
-1. Should `competition_tier` be a free integer, or a controlled league-strength index? An integer is honest but not comparable across countries.
-2. Is a wage or salary block in scope, or is it too commercially sensitive to travel in a forwardable document?
-3. Should there be a signed-submission mechanism, so a receiving club can verify a submission genuinely came from the licensed agent it names?
-4. Does `eligibility` need country-specific sub-objects (GBE points for England, non-EU slots for Italy and Spain), or does that belong in `extensions`?
-5. Should FPDS define a rejection or receipt document, or does that push it into protocol territory it should stay out of?
+JSON Schema cannot express these rules. A conforming implementation MUST enforce each one.
+
+1. `consent.is_minor` agrees with `player.date_of_birth` on the date of `submission.submitted_at` (§10.1).
+2. In a `YYYY/YY` season, the second part is the year after the first part (§9.1).
+3. Each key in `provenance` resolves to a value in the same document (§11.1).
+4. `extensions` contains no diagnoses, injury details or medical history (§12).
+
+## 14. Open questions
+
+These questions are not answered. Each question has an ID that does not change. The "v0.1.0 ships" column states what implementations do until the question has an answer.
+
+Agents, clubs and other parties answer questions through the consultation pages on `https://fpds.football`. Technical questions use GitHub Discussions only. `DECISIONS.md` records each answer.
+
+| ID | Question | v0.1.0 ships | Consultation |
+|---|---|---|---|
+| OQ-1 | Does FPDS need a level for each competition? Is a free integer sufficient, or is a league-strength index necessary? | No competition level | Not yet open |
+| OQ-2 | Is information about wages or salary in scope, or is it too commercially sensitive for a document that parties forward? | No wage fields | [Open](https://fpds.football/consult/wages) |
+| OQ-3 | Does FPDS need signed submissions, so that a club can make sure that a submission came from the agent that it names? | No signatures | GitHub Discussion |
+| OQ-4 | Do eligibility rules for each country (for example, GBE points in England) belong in the core, or in extensions? | No eligibility fields | Not yet open |
+| OQ-5 | Does FPDS define a receipt or rejection document, or is that a protocol? | No receipt document | GitHub Discussion |
+| OQ-6 | How does FPDS describe a player whose full date of birth is not known? | A full date of birth is required | Not yet open |
+| OQ-7 | Does FPDS need to show the difference between "not disclosed" and "not known"? | A missing field means "not stated" | GitHub Discussion |
+| OQ-8 | How does a submission record the consent of a parent or guardian for a minor? | No field for who gave consent | Not yet open |
+| OQ-9 | Does `free_agent` need to separate players whose professional contract ended from players who were never professionals? | One value, `free_agent` | Not yet open |
+| OQ-10 | Does FPDS need side-specific codes for more central positions? | `LCB` and `RCB` only | Not yet open |
+| OQ-11 | Does `asserted_by` need a structured format? | Free text | GitHub Discussion |
+| OQ-12 | Can a parent, a guardian or a club send a submission? | `intermediary` or `player` only | Not yet open |
+| OQ-13 | Do clubs need youth or academy categories in addition to `amateur`? | `amateur` only | Not yet open |
+| OQ-14 | Do release clauses and sell-on percentages belong in a submission? | No release clause or sell-on fields | [Open](https://fpds.football/consult/release-clauses) |
+| OQ-15 | Does a submission state medical availability, and where does availability end and health data start? | No medical fields | [Open](https://fpds.football/consult/medical-availability) |
+| OQ-16 | Does a submission state contract extension options, and which party holds them? | No extension option field | Not yet open |
+| OQ-17 | Does a submission include links to video and scouting reports? | No media fields | Not yet open |
+| OQ-18 | Is the agent licence sufficient, or do clubs need the agency name and the mandate expiry date? | `agent_name`, `fifa_agent_licence`, `mandate_status` | Not yet open |
+| OQ-19 | Does a submission include the common name or shirt name of the player? | Full name only | Not yet open |
+| OQ-20 | Does a submission state commercial terms, such as asking price, loan fee and availability date? | `purposes` only | Not yet open |
+| OQ-21 | Which identifiers other than FIFA Connect belong in the core? | `fifa_connect_id` only | GitHub Discussion |
+| OQ-22 | Which performance figures other than goals, assists and clean sheets belong in the core (for example starts, goals conceded, saves)? | Goals, assists, clean sheets | Not yet open |
+| OQ-23 | Does a submission include a physical profile, such as preferred foot and height? | No physical profile | Not yet open |

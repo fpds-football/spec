@@ -1,5 +1,5 @@
 {
-  "description": "Document envelope, consent and extensions (SPEC sections 3, 10, 12)",
+  "description": "Document envelope and null values (SPEC sections 2 and 3)",
   "schema": "schema/v0.1/player.json",
   "base": "examples/valid/free-agent-minimal.json",
   "tests": [
@@ -9,27 +9,7 @@
       "valid": true
     },
     {
-      "description": "a missing consent block is rejected",
-      "patch": [
-        {
-          "op": "remove",
-          "path": "/consent"
-        }
-      ],
-      "valid": false
-    },
-    {
-      "description": "consent without a minor flag is rejected",
-      "patch": [
-        {
-          "op": "remove",
-          "path": "/consent/subject_is_minor"
-        }
-      ],
-      "valid": false
-    },
-    {
-      "description": "a version from a future major line is rejected by the 0.1 schema",
+      "description": "a version from a later minor line is rejected by the 0.1 schema",
       "patch": [
         {
           "op": "replace",
@@ -62,25 +42,36 @@
       "valid": false
     },
     {
-      "description": "the same value inside a namespaced extension is accepted",
+      "description": "a member removed from the first draft is rejected",
       "patch": [
         {
           "op": "add",
-          "path": "/extensions",
+          "path": "/medical",
           "value": {
-            "com.exampleclub/scouting_grade": "B+"
+            "current_status": "available"
           }
         }
       ],
-      "valid": true
+      "valid": false
     },
     {
-      "description": "a submission purpose outside the vocabulary is rejected",
+      "description": "null in place of a required value is rejected",
       "patch": [
         {
           "op": "replace",
-          "path": "/submission/purpose",
-          "value": "enquiry"
+          "path": "/player/full_name",
+          "value": null
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "null in place of an optional value is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/player/external_ids",
+          "value": null
         }
       ],
       "valid": false

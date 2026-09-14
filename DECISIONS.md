@@ -78,7 +78,7 @@ Each entry has an ID, a date, a status, the decision, the reason, and the altern
 - **Date:** 2026-09-14
 - **Status:** Pre-release, maintainer decision
 
-**Decision.** Before `v0.1.0`, the maintainer can change the draft directly. After `v0.1.0`, every schema change needs a consultation that stays open for at least 14 days. A consultation is the website page, the form and the GitHub Discussion together (see D-23). This file records every decision, and pre-release decisions carry their own label.
+**Decision.** Before `v0.1.0`, the maintainer can change the draft directly. After `v0.1.0`, every schema change needs a consultation that stays open for at least 14 days. A consultation is the website page, the form and the GitHub Discussion together (see D-25). This file records every decision, and pre-release decisions carry their own label.
 
 **Reason.** The 14-day rule protects people who depend on the specification. Before the first release, nobody depends on it. A public record of the reasons keeps the pre-release work open to examination.
 
@@ -165,6 +165,8 @@ These fields and blocks from the first draft are not in the core. Each is a cand
 - `external_ids.transfermarkt_id`, `external_ids.wyscout_id`, `external_ids.opta_id`
 - `performance[].competition_tier`, `performance[].starts`
 - `submission.note`
+
+D-28 later added `submission.sender`, and made `representation` required only when the sender is an intermediary.
 
 **Reason.** The first draft had 64 fields and described itself as "twenty-ish". Each field in v0.1.0 is a permanent commitment until a major version. A small core also gives each later addition its own consultation.
 
@@ -312,7 +314,7 @@ The removal of some fields has a specific reason:
 ### D-22. Contract status and current club
 
 - **Date:** 2026-09-14
-- **Status:** Pre-release, maintainer decision
+- **Status:** Superseded by D-27
 
 **Decision.**
 
@@ -380,8 +382,8 @@ The removal of some fields has a specific reason:
 
 **Decision.** Three consultations open at launch:
 
-1. Release clauses and sell-on percentages
-2. Medical availability
+1. Release clauses and sell-on percentages (OQ-14)
+2. Medical availability (OQ-15)
 3. Wages and salary (OQ-2)
 
 After launch, a new consultation opens every two to three weeks. Each stays open for at least 14 days. §14 lists all open questions. Questions without an open consultation say "consultation not yet open". Technical questions, such as the format of `asserted_by` and signed submissions, use GitHub Discussions only. The "Two questions the draft needs answered" section of `index.html` becomes "Open consultations".
@@ -389,3 +391,51 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 **Reason.** Twenty questions at one time give low response rates and too little evidence for each decision. These three topics interest agents and clubs most, and the wage question has the largest effect on adoption.
 
 **Alternatives considered.** Open all consultations at launch.
+
+---
+
+## Decisions made during implementation
+
+### D-27. Five contract statuses with FIFA definitions
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** This entry replaces D-22.
+
+- `contract.status` has the values `under_contract`, `on_loan`, `amateur`, `free_agent` and `unknown`.
+- "Professional" and "amateur" have the meanings in Article 2 of the FIFA Regulations on the Status and Transfer of Players.
+- `amateur` is a player who is registered with a club and is not a professional. `free_agent` is a player who is not registered with any club.
+- `youth_scholarship` is removed.
+- For each status, §7.2 of `SPEC.md` states whether `current_club`, `expiry_date` and `parent_club` MUST be present, MUST NOT be present, or MAY be present.
+
+**Reason.** Under D-22, a registered amateur player had no correct status. `youth_scholarship` did not apply, and `free_agent` did not permit a current club. The academy example had this problem. FIFA defines "professional" and "amateur", so the two words have the same meaning in all federations. "Scholarship" is an English term. Under D-9, fields that do not apply to a status are forbidden, not optional.
+
+**Alternatives considered.** A `semi_pro` status. Semi-professional describes the level of a league or of pay, not a contract. Many semi-professional players have written contracts, so the value overlaps with `under_contract`. The level of a competition is open question OQ-1. Academy categories are open question OQ-13.
+
+### D-28. A player can send their own submission
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- `submission.sender` is required, with the values `intermediary` and `player`.
+- If `sender` is `intermediary`, `representation` is required. If `sender` is `player`, `representation` is optional.
+- If `consent.is_minor` is `true`, `sender` MUST NOT be `player`. The schema enforces this.
+- v0.1.0 has no sender value for a parent, a guardian or a club. This is open question OQ-12.
+
+**Reason.** Players without an agent share their own profiles. Under D-11, `representation.agent_name` was required, so a player without an agent had to write a placeholder such as "Not represented". A profile that a minor sends directly to clubs is a safeguarding risk.
+
+**Alternatives considered.** Limit v0.1.0 to intermediaries. This excludes players without representation, which is a large group.
+
+### D-29. A value without provenance has the sender as its source
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** The provenance source `player_stated` is added. If a value has no provenance entry, its source is `agent_stated` when the sender is `intermediary`, and `player_stated` when the sender is `player`.
+
+**Reason.** The first draft gave `agent_stated` as the source for all values without an entry. After D-28, that source is incorrect for a submission that the player sends.
+
+**Alternatives considered.** Keep `agent_stated` as the only default. It then states that an agent made a claim when no agent took part.

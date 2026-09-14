@@ -3,73 +3,49 @@
   "submission": {
     "submission_id": "b7f3c2e1-4a9d-4f11-9c3e-2a1d5f8b0c44",
     "submitted_at": "2026-09-13T09:41:00Z",
-    "purpose": "permanent_transfer",
-    "note": "Open to offers in January. Player is settled but the family would prefer a move to the UK."
+    "purposes": [
+      "permanent_transfer",
+      "loan"
+    ],
+    "sender": "intermediary"
   },
   "player": {
     "full_name": "Tomasz Andrzej Wojcik",
-    "known_as": "Tomasz Wojcik",
     "date_of_birth": "2003-04-17",
     "nationalities": [
       "POL",
       "DEU"
     ],
-    "preferred_foot": "right",
-    "height_cm": 183,
     "current_club": {
       "name": "Widzew Lodz",
-      "country": "POL",
-      "competition": "Ekstraklasa"
+      "country": "POL"
     },
     "external_ids": {
-      "transfermarkt_id": "612344",
-      "wyscout_id": "419827"
+      "fifa_connect_id": "1702934415"
     }
   },
   "positions": {
     "primary_position": "CM",
     "secondary_positions": [
-      "DM",
-      "AM"
+      "CDM",
+      "CAM"
     ]
   },
   "contract": {
     "status": "under_contract",
-    "expiry_date": "2027-06-30",
-    "option_to_extend": true,
-    "release_clause": {
-      "amount": 180000000,
-      "currency": "EUR",
-      "conditions": "Applies to clubs outside Poland only."
-    },
-    "sell_on_percentage": 15
+    "expiry_date": "2027-06-30"
   },
   "representation": {
     "agent_name": "Marek Zielinski",
-    "agency": "Zielinski Sports Management",
     "fifa_agent_licence": "POL-2024-01188",
-    "mandate_status": "exclusive",
-    "mandate_expiry": "2027-01-31"
-  },
-  "availability": {
-    "available_for": [
-      "permanent_transfer",
-      "loan"
-    ],
-    "available_from": "2027-01-01",
-    "asking_price": {
-      "amount": 150000000,
-      "currency": "EUR"
-    }
+    "mandate_status": "exclusive"
   },
   "performance": [
     {
       "season": "2025/26",
       "competition": "Ekstraklasa",
       "competition_country": "POL",
-      "competition_tier": 1,
       "appearances": 31,
-      "starts": 27,
       "minutes": 2418,
       "goals": 10,
       "assists": 6
@@ -78,39 +54,16 @@
       "season": "2024/25",
       "competition": "Ekstraklasa",
       "competition_country": "POL",
-      "competition_tier": 1,
       "appearances": 24,
-      "starts": 14,
       "minutes": 1362,
       "goals": 3,
       "assists": 4
     }
   ],
-  "eligibility": {
-    "passports": [
-      "POL",
-      "DEU"
-    ],
-    "work_permit_required": false,
-    "gbe_points": 15,
-    "homegrown_status": "none",
-    "international_caps": 2
-  },
-  "medical": {
-    "current_status": "available"
-  },
-  "media": [
-    {
-      "type": "highlights",
-      "url": "https://example.com/wojcik-2526-highlights",
-      "recorded_on": "2026-08-30"
-    }
-  ],
   "consent": {
     "lawful_basis": "consent",
-    "consent_obtained": true,
     "consent_date": "2026-07-02",
-    "subject_is_minor": false
+    "is_minor": false
   },
   "provenance": {
     "/performance/0/minutes": {
@@ -123,21 +76,14 @@
       "asserted_by": "Wyscout",
       "asserted_at": "2026-09-01T00:00:00Z"
     },
-    "/contract/release_clause": {
-      "source": "agent_stated",
-      "asserted_by": "agent:POL-2024-01188",
-      "asserted_at": "2026-09-13T09:41:00Z"
-    },
     "/contract/expiry_date": {
       "source": "verified",
       "asserted_by": "Widzew Lodz",
       "asserted_at": "2026-08-14T00:00:00Z",
       "verified_against": "FIFA TMS"
-    },
-    "/eligibility/gbe_points": {
-      "source": "estimated",
-      "asserted_by": "agent:POL-2024-01188",
-      "asserted_at": "2026-09-13T09:41:00Z"
     }
+  },
+  "extensions": {
+    "com.example/scouting_grade": "B+"
   }
 }

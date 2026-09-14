@@ -1,0 +1,115 @@
+{
+  "description": "Sender, representation and minors (SPEC sections 4, 8 and 10)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/free-agent-minimal.json",
+  "tests": [
+    {
+      "description": "a player sending their own profile needs no representation",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "a player sending their own profile can name their agent",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/representation",
+          "value": {
+            "agent_name": "Priya Raman",
+            "mandate_status": "non_exclusive"
+          }
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "an intermediary without a representation block is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/sender",
+          "value": "intermediary"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an intermediary with a representation block is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/sender",
+          "value": "intermediary"
+        },
+        {
+          "op": "add",
+          "path": "/representation",
+          "value": {
+            "agent_name": "Priya Raman",
+            "mandate_status": "non_exclusive"
+          }
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a minor sending their own profile is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/date_of_birth",
+          "value": "2010-03-08"
+        },
+        {
+          "op": "replace",
+          "path": "/consent/is_minor",
+          "value": true
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an intermediary sending the profile of a minor is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/date_of_birth",
+          "value": "2010-03-08"
+        },
+        {
+          "op": "replace",
+          "path": "/consent/is_minor",
+          "value": true
+        },
+        {
+          "op": "replace",
+          "path": "/submission/sender",
+          "value": "intermediary"
+        },
+        {
+          "op": "add",
+          "path": "/representation",
+          "value": {
+            "agent_name": "Priya Raman",
+            "mandate_status": "non_exclusive"
+          }
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "an empty agent name is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/representation",
+          "value": {
+            "agent_name": "",
+            "mandate_status": "none"
+          }
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

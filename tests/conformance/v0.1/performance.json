@@ -1,5 +1,5 @@
 {
-  "description": "Performance records and the minutes denominator (SPEC section 8)",
+  "description": "Performance records and the minutes denominator (SPEC section 9)",
   "schema": "schema/v0.1/player.json",
   "base": "examples/valid/midfielder-under-contract.json",
   "tests": [
@@ -54,15 +54,59 @@
       "valid": true
     },
     {
-      "description": "a malformed season string is rejected",
+      "description": "a calendar-year season is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/performance/1/season",
+          "value": "2025"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a season with a hyphen is rejected",
       "patch": [
         {
           "op": "replace",
           "path": "/performance/0/season",
-          "value": "2025-2026"
+          "value": "2025-26"
         }
       ],
       "valid": false
+    },
+    {
+      "description": "a season with four-digit years on both sides is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/performance/0/season",
+          "value": "2025/2026"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a season with a two-digit first year is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/performance/0/season",
+          "value": "25/26"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "clean sheets are accepted for an outfield player",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/performance/0/clean_sheets",
+          "value": 11
+        }
+      ],
+      "valid": true
     },
     {
       "description": "a stored per-90 figure is rejected",
@@ -71,6 +115,28 @@
           "op": "add",
           "path": "/performance/0/goals_per_90",
           "value": 0.37
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "starts are not in the core",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/performance/0/starts",
+          "value": 27
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "competition tier is not in the core",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/performance/0/competition_tier",
+          "value": 1
         }
       ],
       "valid": false
