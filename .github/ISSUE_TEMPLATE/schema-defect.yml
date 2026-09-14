@@ -1,12 +1,12 @@
 name: Schema defect
-description: The schema accepts something the spec says it should reject, or rejects something it should accept.
+description: The schema accepts a document that SPEC.md rejects, or rejects a document that SPEC.md accepts.
 labels: ["defect", "schema"]
 body:
   - type: markdown
     attributes:
       value: |
-        Use this when the schema and `SPEC.md` disagree. If you think the spec itself is
-        wrong, open a discussion instead.
+        Use this form when the schema and `SPEC.md` disagree. If you think that the
+        specification itself is wrong, open a Discussion.
 
   - type: input
     id: version
@@ -19,16 +19,16 @@ body:
   - type: input
     id: section
     attributes:
-      label: Relevant section of SPEC.md
-      placeholder: "Section 8, performance records"
+      label: Section of SPEC.md
+      placeholder: "Section 9, performance"
     validations:
       required: true
 
   - type: textarea
     id: document
     attributes:
-      label: Minimal document
-      description: The smallest submission that shows the problem. It will be rendered as JSON.
+      label: Smallest document
+      description: The smallest submission that shows the problem. GitHub shows it as JSON.
       render: json
     validations:
       required: true
@@ -38,14 +38,14 @@ body:
     attributes:
       label: What happens
       options:
-        - The schema accepts this and the spec says it should not
-        - The schema rejects this and the spec says it should not
+        - The schema accepts this document, and SPEC.md rejects it
+        - The schema rejects this document, and SPEC.md accepts it
     validations:
       required: true
 
   - type: textarea
     id: expected
     attributes:
-      label: What should happen, and why you read the spec that way
+      label: The correct result, and the text in SPEC.md that gives it
     validations:
       required: true

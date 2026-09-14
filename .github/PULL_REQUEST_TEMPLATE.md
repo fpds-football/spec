@@ -1,26 +1,30 @@
 ## What this changes
 
-<!-- One or two sentences. -->
+<!-- Write one or two sentences. -->
 
 ## Type of change
 
-- [ ] Editorial only (prose, typos, formatting — no behaviour change)
-- [ ] Patch: schema corrected to match the stated intent of the spec
-- [ ] Minor: optional field added, enum value added, constraint relaxed
-- [ ] Major: field removed or retyped, optional field made required, enum value removed
+- [ ] Text only (prose, spelling or formatting, with no change to behaviour)
+- [ ] Patch: the schema now agrees with the stated intention of the specification
+- [ ] Minor: an optional field is added, an enum value is added, or a constraint is relaxed
+- [ ] Major: a field is removed or changes type, an optional field becomes required, or an enum value is removed
 
 ## Checklist
 
-- [ ] `SPEC.md` and `schema/v0.1/player.json` agree with each other
-- [ ] Conformance fixtures added or updated under `tests/conformance/`
-- [ ] At least one fixture case fails before this change and passes after it
-- [ ] `python3 tests/run_conformance.py` passes locally
-- [ ] `CHANGELOG.md` updated under `Unreleased`
-- [ ] Worked example added or updated if this changes how a real submission looks
+- [ ] `SPEC.md` and `schema/v0.1/player.json` agree
+- [ ] Conformance cases are added or updated in `tests/conformance/`
+- [ ] At least one case fails before this change and passes after it
+- [ ] Each rejection case fails for the reason in its description
+- [ ] `python3 tests/run_conformance.py` passes on my computer
+- [ ] `DECISIONS.md` has an entry with the reason
+- [ ] `CHANGELOG.md` has an entry under `Unreleased`
+- [ ] An example is added or updated, if the change affects how a real submission looks
+- [ ] New prose uses Simple English and British spelling
 
-## Discussion
+## Consultation
 
 <!--
-Link the discussion this came out of. Schema changes should have had a thread open
-for at least 14 days before landing. Editorial fixes don't need one.
+Link the consultation or Discussion for this change, with its ID from §14 of SPEC.md.
+After v0.1.0, a schema change needs a consultation that is open for at least 14 days.
+A change to text only does not need a consultation.
 -->

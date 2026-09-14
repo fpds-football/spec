@@ -1,11 +1,14 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Propose a field, or argue against one
+  - name: Answer a consultation
+    url: https://fpds.football/consult/
+    about: For agents, clubs, players and recruitment staff. You do not need a GitHub account.
+  - name: Propose a field, or argue against a field
     url: https://github.com/fpds-football/spec/discussions/categories/field-proposals
-    about: The field list is still contested. Proposals and objections belong in a discussion, not an issue.
-  - name: Ask how something should work
+    about: Proposals and objections about fields go in a Discussion, not in an issue.
+  - name: Ask how something works
     url: https://github.com/fpds-football/spec/discussions/categories/q-a
-    about: Questions about using FPDS, or about a case the spec does not obviously cover.
+    about: Questions about FPDS, or about a case that the specification does not clearly cover.
   - name: Report a security or privacy defect
     url: https://github.com/fpds-football/spec/security/advisories/new
-    about: Privately report a schema defect with security or data-protection impact.
+    about: Report a schema defect with security or data-protection impact in private.

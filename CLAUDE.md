@@ -1,69 +1,107 @@
-# FPDS — working notes for Claude Code
+# FPDS: working notes for Claude Code
 
-This is the specification repository for the Football Player Data Standard. It is a **spec repo, not a library**. Nothing here is published to a package manager.
+This repository is the specification for the Football Player Data Standard. It is a **specification repository, not a library**. Nothing in it goes to a package manager.
 
 ## Hard rules
 
-**Never change the `$id` base URL.** Every schema `$id` resolves under `https://fpds.football/schema/`. These URLs are a permanent commitment and published ones are never repointed or removed. If a change would alter an existing `$id`, stop and ask.
+**Do not change the `$id` base URL.** Each schema `$id` is under `https://fpds.football/schema/`. These URLs are permanent. Nobody points a published URL to a different file or removes it. If a change alters an existing `$id`, stop and ask.
 
-**No reference implementation in this repo.** A spec repo that ships a library in one language becomes a project about that language. Implementations go in sibling repos (`fpds-football/fpds-ts` first, `fpds-football/fpds-py` later). `tests/run_conformance.py` is CI plumbing and is exempt — it is not an implementation and should not grow into one.
+**Do not add a reference implementation.** Implementations go in separate repositories: `fpds-football/fpds-ts` first, then `fpds-football/fpds-py`. `tests/run_conformance.py` is CI infrastructure, not an implementation. Do not let it grow into one.
 
-**The schema and SPEC.md must never disagree.** If they do, that is a bug in one of them. Do not change one without the other.
+**Keep the schema and `SPEC.md` in agreement.** If they disagree, one of them has a defect. Do not change one without the other.
 
-**Every schema change needs a conformance case that fails before it and passes after it.** If all existing cases stay green and none are added, either the change does nothing or the suite has a gap. Say which.
+**Each schema change needs a conformance case that fails before the change and passes after it.** If no case is added and all cases still pass, the change does nothing or the suite has a gap. Tell the user which.
+
+**Make sure that each rejection case fails for the reason in its description.** A patch that breaks a different rule gives a false pass.
+
+**Record each decision in `DECISIONS.md`.** Give the decision, the reason, the alternatives and the date. Do not reuse or renumber IDs. If a decision replaces an entry, change the status of the old entry to "Superseded by D-n".
+
+**Before `v0.1.0`, the maintainer can change the draft directly. After `v0.1.0`, a schema change needs a consultation that is open for at least 14 days.** `GOVERNANCE.md` describes the process.
 
 ## Commands
 
 ```bash
 pip install -r tests/requirements.txt
-python3 tests/run_conformance.py                                      # 43 cases
+python3 tests/run_conformance.py
 check-jsonschema --schemafile schema/v0.1/player.json examples/valid/*.json
 check-jsonschema --check-metaschema schema/v0.1/player.json
 ```
 
-JSON files are canonically formatted: two-space indent, trailing newline, `ensure_ascii=False`. CI warns on drift.
+JSON files have a canonical format: two-space indent, a newline at the end, and `ensure_ascii=False`. CI gives a warning when a file does not match.
 
-## Design decisions already made
+## Rules for schema design
 
-Do not relitigate these without being asked. If a change would reverse one, flag it rather than doing it quietly.
+Obey these rules for every change. If a change breaks one, tell the user. Do not break it quietly.
 
-- **Money is an integer in minor units** with an ISO 4217 code. `250000000` is £2,500,000. Ugly to read, but floats and transfer fees are a bad combination.
-- **No stored per-90 figures.** They are derived from minutes and output. Storing both invites the two disagreeing. The schema rejects them via `additionalProperties: false`.
-- **`minutes` is required whenever any output figure is present.** Output without a denominator is not information. This is the spec's first design principle.
-- **`medical` carries availability status only.** No diagnoses, no injury history, and not in `extensions` either. That is special-category health data in most jurisdictions and does not belong in a forwardable document.
-- **`subject_is_minor` is computed from `date_of_birth`**, never asserted independently. JSON Schema cannot enforce this; implementations must.
-- **Provenance is claim-level**, keyed by JSON Pointer, and defaults to `agent_stated` when absent. `verified` requires `verified_against`. Provenance records who claimed something — it is not authentication and does not prove the named party sent the document.
-- **Position codes distinguish `DM`, `CM` and `AM`.** This is deliberate and non-optional. "Centre mid" is not a valid value.
-- **Twenty-ish fields in the core, everything else in `extensions`**, namespaced by reverse DNS. Resist scope creep hard. A field added now cannot be removed before a major version.
-- **`$defs` stay inline in `player.json`.** Splitting them into separate files only pays off once there is a second document type, and until then it makes the schema harder to copy.
-- **No `examples/invalid/`.** The conformance fixtures are that, and duplicating them means they drift.
+- **When a decision needs industry input, ship the smaller or stricter option and add the question to §14 of `SPEC.md`.** An addition or a relaxation later is a minor version. A removal or a restriction later is a major version.
+- **Do not design a new field without consultation.** Propose an open question in §14 instead. The maintainer uses consultations to get industry input and public content.
+- **Boolean field names start with `is_` or `has_`.**
+- **Use words that have the same meaning in all countries.** Where FIFA defines a term, use the FIFA definition. Do not use English-only terms such as "scholarship".
+- **Do not use `null`.** A required field that can be unknown has the value `unknown`. A missing optional field means "not stated".
+- **Forbid fields that do not apply.** Do not make them optional.
+- **A `MUST` needs enforcement.** The schema enforces it, or §13.1 of `SPEC.md` lists it as a rule for implementations.
+- **Keep `$defs` inline in `player.json`.** Separate files are useful only when there is a second document type.
+- **Do not add `examples/invalid/`.** The conformance cases are the invalid examples.
+
+## Decisions already made
+
+Do not argue against these unless the user asks. `DECISIONS.md` gives the reasons.
+
+- **The core is the basic set in D-11 and D-28.** Fields from the first draft that are not in the core are open questions in §14.
+- **`submission.sender` is `intermediary` or `player`.** `representation` is required for an intermediary. A minor cannot be the sender.
+- **Five contract statuses with FIFA definitions:** `under_contract`, `on_loan`, `amateur`, `free_agent`, `unknown`. §7.2 of `SPEC.md` states which fields each status permits.
+- **Sixteen uppercase position codes.** They separate `CDM`, `CM` and `CAM`, and include `LCB` and `RCB`. "Centre mid" is not valid.
+- **`minutes` is required in each season record.** Per-90 figures are not stored.
+- **Seasons are `YYYY/YY` or `YYYY`.**
+- **Dates and timestamps have patterns**, because `format` is only an annotation in many validators.
+- **`consent.is_minor` means less than 18 years old** on the date of `submitted_at`. Implementations calculate it from `date_of_birth`.
+- **Provenance is for each claim, with JSON Pointer keys.** A value without an entry has the sender as its source. Provenance is not authentication.
+- **No medical data in the core.** `extensions` MUST NOT contain diagnoses, injury details or medical history.
+- **Extension keys use a reverse-DNS prefix.** The `football.fpds` prefix is reserved and unused.
+- **Money uses integer minor units with an ISO 4217 code.** No field uses money in v0.1.0. Use this rule when money fields return.
 
 ## Conformance fixture format
 
-Cases are RFC 6902 JSON Patch operations applied to a known-good document, so each case shows only the thing under test. `/` inside a JSON Pointer key escapes as `~1`, which matters because the `provenance` object is keyed by pointers: `/provenance/~1contract~1expiry_date`.
+Each case is a set of RFC 6902 JSON Patch operations on a valid base document. A case shows only the thing that it tests. Inside a JSON Pointer, `/` in a key becomes `~1`. This matters for `provenance`, because its keys are pointers: `/provenance/~1contract~1expiry_date`.
 
-Full format in `tests/README.md`. A patch with six operations in it is usually two cases.
+If a patch removes a value, also remove its provenance entry. `tests/README.md` gives the full format.
 
 ## Versioning
 
-Semver, describing the spec rather than the repo.
+Semantic versioning describes the specification, not the repository.
 
-- **Major** — removing a field, retyping a field, making an optional field required, removing an enum value.
-- **Minor** — adding an optional field, adding an enum value, relaxing a constraint.
-- **Patch** — prose corrections, or the schema not matching the stated intent of the spec.
+- **Major:** remove a field, change the type of a field, make an optional field required, or remove an enum value.
+- **Minor:** add an optional field, add an enum value, or relax a constraint.
+- **Patch:** correct the text, or correct the schema where it does not agree with the stated intention of the specification.
 
-Schema changes should have had a discussion thread open for at least 14 days before landing. Every change gets a `CHANGELOG.md` entry under `Unreleased`.
+Each change gets a `CHANGELOG.md` entry under `Unreleased`.
 
-## Tone for spec text
+## Writing style
 
-RFC 2119 keywords in capitals, used deliberately: if it says MUST, the schema has to enforce it and a conforming implementation has to reject violations. Normative statements in `SPEC.md`; rationale and opinion in `README.md` or a discussion. Plain prose, no hedging, British spelling in new text but don't convert existing text either way.
+All prose uses Simple English (ASD-STE100, pragmatic mode). Use the `simple-english` skill.
+
+- Keep RFC 2119 keywords in capitals: `MUST`, `SHOULD`, `MAY`. Do not use "should", "may", "might", "could" or "would" in lowercase.
+- Use British spelling.
+- Write descriptions with a maximum of 25 words in each sentence. Write instructions with a maximum of 20 words.
+- Do not use semicolons or contractions.
+- Put normative statements in `SPEC.md`. Put reasons in `DECISIONS.md`. Put opinion in a Discussion.
+- `index.html` follows the structural rules but keeps its headline voice.
 
 ## Open questions
 
-Five sit in §14 of `SPEC.md` and are genuinely unresolved. The wage/salary field is the most commercially loaded — it is the reason some agencies would refuse to adopt this. Don't resolve any of them unilaterally.
+§14 of `SPEC.md` lists the open questions with IDs (`OQ-n`). Each has a "v0.1.0 ships" column. Do not answer an open question without the user.
 
-## Context worth knowing
+Three consultations open at launch: wages (OQ-2), release clauses and sell-on percentages (OQ-14), and medical availability (OQ-15). The wage question has the most commercial effect. Some agencies can refuse to adopt FPDS because of it.
 
-The maintainer builds commercial software in this space (Player Status, and Relai, an operating system for football agents). That conflict is stated openly in `GOVERNANCE.md` along with three commitments against it. Changes that would make FPDS more convenient for one product and less useful for everyone else are exactly what those commitments exist to catch — say so if you see one.
+## Hosting and infrastructure
 
-Governance is currently one person. It moves somewhere neutral if adoption gets real, with the threshold written down in `GOVERNANCE.md`.
+- **The GitHub organisation is `fpds-football`.** Do not use `fpds`.
+- **The site uses Cloudflare Pages, and the domain is registered at Cloudflare.** Do not assume GitHub Pages.
+- **The site publishes only `index.html`, `schema/`, `consult/` and `_headers`.** Do not publish the repository root.
+- **Consultation forms use Tally.** GitHub is the record, and the website is where non-technical people take part.
+
+## Context
+
+The maintainer builds commercial software for football agents and clubs (Player Status, and Relai, an operating system for football agents). `GOVERNANCE.md` states this conflict and three commitments against it. If a change makes FPDS better for one product and less useful for other parties, tell the user.
+
+One person governs FPDS now. If adoption is real, governance moves to a neutral organisation. `GOVERNANCE.md` states the conditions.

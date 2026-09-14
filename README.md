@@ -1,99 +1,116 @@
-# FPDS - Football Player Data Standard
+# FPDS: Football Player Data Standard
 
-An open format for sharing player information between agents, intermediaries and clubs.
+FPDS is an open format for player information that agents, intermediaries, players and clubs send to each other.
 
-**Status:** draft, v0.1.0. Nothing here is stable yet. Breaking changes are expected before v1.0.
+**Status:** draft, version 0.1.0, not released. Nothing is stable yet. Breaking changes are expected before version 1.0.
 
 ---
 
 ## The problem
 
-Player submissions travel between parties as free text with no agreed structure and no provenance:
+Player submissions travel between parties as free text, with no agreed structure and no sources:
 
 > Good lad, played in X league, 10 goals, plays centre mid, available now.
 
-Ten goals in how many minutes, and against what level of opposition? Centre mid as a 6, an 8 or a 10? Available on what terms — contract expiry, release clause, sell-on? And does the sender hold the mandate?
+This message does not answer the questions that a club needs to ask:
 
-Every recruitment department reconstructs that context by hand, hundreds of times a window. FPDS is an attempt to stop that.
+- Ten goals in how many minutes?
+- Centre mid as a 6, an 8 or a 10?
+- Is the player under contract, and until when?
+- Does the sender have a mandate to offer the player?
+- Who says so?
+
+Each recruitment department finds this information by hand, hundreds of times in each transfer window. FPDS gives a submission a structure that answers these questions.
 
 ## What FPDS is
 
-A JSON schema for a single player submission. Around twenty fields, covering:
+FPDS is a JSON Schema for one player submission. The core is small on purpose. It contains:
 
-- **Identity** - name, date of birth, nationalities, external identifiers
-- **Position** - a controlled vocabulary that distinguishes a 6 from an 8 from a 10
-- **Contract** - expiry, release clause, sell-on, loan status
-- **Representation** - who is submitting, under what mandate, with what licence number
-- **Performance** - appearances, minutes and output, always with the denominator
-- **Eligibility** - passports, work permit and squad-registration considerations
-- **Provenance** - every claim marked as verified or asserted
+- **Submission.** Who sends it, when, and for which types of deal.
+- **Identity.** Name, date of birth, nationalities and the FIFA Connect identifier.
+- **Position.** Sixteen codes that separate a 6 from an 8 from a 10.
+- **Contract.** Status, with FIFA definitions, expiry date and loan details.
+- **Representation.** The agent, the licence and the mandate.
+- **Performance.** Appearances and minutes, with goals, assists and clean sheets.
+- **Consent.** The lawful basis for sharing the data, and whether the player is a minor.
+- **Provenance.** The source of each claim.
+
+Other fields enter the core only after public consultation. Until then, producers put them in `extensions`.
 
 ## What FPDS is not
 
-- **Not a protocol.** It defines the shape of a payload, not how two systems exchange it. A submission can travel by email, API, file drop or a message attachment.
-- **Not a database or a registry.** It does not tell you whether a claim is true. It tells you who claimed it.
-- **Not a replacement for FIFA TMS or the FIFA Clearing House.** Where field names overlap with TMS, FPDS follows TMS.
+- **FPDS is not a protocol.** It defines the structure of a document, not how two systems exchange it. A submission can travel by email, API, file transfer or message.
+- **FPDS is not a database or a registry.** It does not tell you whether a claim is true. It tells you who made the claim.
+- **FPDS does not replace FIFA TMS or the FIFA Clearing House.** Where FPDS and FIFA TMS use the same concept, FPDS follows FIFA.
 
 ## The provenance rule
 
-This is the part that matters. A structured claim is not a verified claim, and a standard that blurs the two makes things worse rather than better.
+This part of FPDS is the most important. A claim in a structure is not a verified claim. A standard that hides this difference makes the problem worse.
 
-Every value in a submission carries a provenance entry, keyed by JSON Pointer:
+A submission can give a source for each value. Each key is a JSON Pointer to the value:
 
 ```json
 "provenance": {
-  "/performance/0/goals": {
+  "/performance/0/minutes": {
     "source": "third_party_data",
     "asserted_by": "Wyscout",
     "asserted_at": "2026-09-01T00:00:00Z"
   },
   "/contract/expiry_date": {
-    "source": "agent_stated",
-    "asserted_by": "agent:FIFA-GBR-004821",
-    "asserted_at": "2026-09-10T14:22:00Z"
+    "source": "verified",
+    "asserted_by": "Widzew Lodz",
+    "verified_against": "FIFA TMS"
   }
 }
 ```
 
-Anything without a provenance entry defaults to `agent_stated`. Consumers should render that distinction visibly. An interface that shows a verified minutes total and an unverified release clause in the same typeface has thrown away the point of the format.
+If a value has no entry, its source is the sender. That is `agent_stated` for an intermediary and `player_stated` for a player. Consumers show the source of each value. If an interface shows a verified minutes total and an unverified claim in the same way, the format has no purpose.
 
-## Repo layout
+## Take part
+
+FPDS grows through public consultation with the football industry.
+
+- **Agents, clubs, players and recruitment staff.** Answer an open consultation at [fpds.football](https://fpds.football). You do not need a GitHub account.
+- **Developers and implementers.** Use [GitHub Discussions](https://github.com/fpds-football/spec/discussions) for technical questions. [`CONTRIBUTING.md`](CONTRIBUTING.md) explains how to propose a change.
+
+§14 of [`SPEC.md`](SPEC.md) lists all open questions.
+
+## Repository layout
 
 ```
-/schema/v0.1/player.json    JSON Schema (2020-12)
-/examples/                  worked examples that validate against the schema
-SPEC.md                     the normative document
-CHANGELOG.md                what changed between versions
+schema/v0.1/player.json     JSON Schema (draft 2020-12)
+examples/valid/             submissions that are valid against the schema
+tests/conformance/          the suite of cases that FPDS accepts and rejects
+SPEC.md                     the normative specification
+DECISIONS.md                the reasons for each decision
+CHANGELOG.md                the changes between versions
+GOVERNANCE.md               who decides, and the conflict of interest
 ```
 
-Schema `$id` values resolve at `https://fpds.football/schema/v0.1/player.json`. These URLs are permanent.
+The schema `$id` is `https://fpds.football/schema/v0.1/player.json`. This URL is permanent.
 
-## Validating
+## Validate a submission
 
 ```bash
 pip install check-jsonschema
-check-jsonschema --schemafile schema/v0.1/player.json examples/*.json
 ```
+
+```bash
+check-jsonschema --schemafile schema/v0.1/player.json examples/valid/*.json
+```
+
+Some rules are not in the schema. §13.1 of `SPEC.md` lists them.
 
 ## Versioning
 
-Semver. The `fpds_version` field in every submission states which version it was written against. Additive changes are minor; removing or retyping a field is major.
+FPDS uses semantic versioning. The `fpds_version` field in each submission states the version that the submission uses. [`CHANGELOG.md`](CHANGELOG.md) states which changes are major, minor or patch.
 
 ## Licence
 
-Spec text and documentation: CC BY 4.0. Schema files and code: Apache-2.0.
+The schema and code use Apache License 2.0. The specification text and documentation use CC BY 4.0. The examples and conformance fixtures use CC0 1.0. [`LICENSING.md`](LICENSING.md) gives the full map.
 
 ## Governance
 
-Right now this is one person's draft, published openly. That is a weakness, not a feature - a standard shaped by a single vendor is a vendor format wearing a costume.
+One person maintains FPDS now, and the draft is public. This is a weakness. A standard that one vendor controls is a vendor format with a different name.
 
-If FPDS gets real adoption, governance moves somewhere neutral with commit rights held by more than one organisation. Anyone who wants a say in that should say so early.
-
-## Contributing
-
-Open a discussion rather than a pull request at this stage. The field list is still contested and it is more useful to argue about what belongs in it than to fix typos.
-
-Two questions the draft most needs answers to:
-
-1. **Clubs and recruitment staff** - what would you need in here before you would ask agents to submit in this format?
-2. **Agents** - what in this draft would stop you using it?
+If FPDS gets real adoption, governance moves to a neutral organisation, and more than one organisation holds commit rights. [`GOVERNANCE.md`](GOVERNANCE.md) states the conditions.

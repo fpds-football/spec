@@ -1,5 +1,5 @@
 name: Spec ambiguity
-description: A part of SPEC.md can be read two ways, and two implementations could reasonably disagree.
+description: A part of SPEC.md has two meanings, and two implementations can disagree about it.
 labels: ["spec", "ambiguity"]
 body:
   - type: input
@@ -13,25 +13,25 @@ body:
   - type: textarea
     id: text
     attributes:
-      label: The text in question
-      description: Quote the sentence or table row.
+      label: The text
+      description: Copy the sentence or the table row.
     validations:
       required: true
 
   - type: textarea
     id: readings
     attributes:
-      label: The two readings
-      description: What a producer might do under each, and what a consumer would then have to handle.
+      label: The two meanings
+      description: For each meaning, what a producer does, and what a consumer then must process.
       placeholder: |
-        Reading A: ...
-        Reading B: ...
+        Meaning A: ...
+        Meaning B: ...
     validations:
       required: true
 
   - type: textarea
     id: preference
     attributes:
-      label: Which reading you would prefer, and what it costs
+      label: The meaning that you prefer, and its cost
     validations:
       required: false

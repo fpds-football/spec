@@ -307,7 +307,7 @@ The removal of some fields has a specific reason:
 
 `CB` is a centre-back who plays on the two sides. `LCB` and `RCB` are centre-backs who play on one side only. A centre-back who plays on the two sides is `CB`, not `LCB` with `RCB` as a secondary position.
 
-**Reason.** `CDM`, `CM` and `CAM` are more widely recognised than `DM`, `CM` and `AM`, and they keep the difference between a 6, an 8 and a 10. Clubs ask for left-sided centre-backs, so `LCB` and `RCB` have a recruitment use. Wide midfielders in a 4-4-2 have a different profile from wingers, so `RM` and `LM` stay. Uppercase agrees with scouting platforms and broadcast graphics.
+**Reason.** More people recognise `CDM`, `CM` and `CAM` than `DM`, `CM` and `AM`. The codes keep the difference between a 6, an 8 and a 10. Clubs ask for left-sided centre-backs, so `LCB` and `RCB` have a recruitment use. Wide midfielders in a 4-4-2 have a different profile from wingers, so `RM` and `LM` stay. Uppercase agrees with scouting platforms and broadcast graphics.
 
 **Alternatives considered.** Side-specific codes for all central positions (`LCDM`, `RCDM`, `LCM`, `RCM`, `LCAM`, `RCAM`). These are slots in a formation, not player types. The same player gets a different code in a different formation. `SS` (second striker) is removed, because its meaning is contested. Other side-specific positions are open question OQ-10.
 
@@ -352,7 +352,7 @@ The removal of some fields has a specific reason:
 - The `football.fpds` prefix is reserved. No key uses it in v0.1.0. Examples in the specification use `com.example`.
 - `extensions` MUST NOT contain diagnoses, injury details or medical history. An availability status is permitted.
 
-**Reason.** Without a prefix, two producers can use the same key with different meanings. A domain name shows who defined a key, and FPDS needs no registry to issue names. If the specification defines keys under its own prefix, those keys become a second core without consultation. The first draft stated the medical restriction only in internal notes, and `medical` is not in the core, so the restriction must be in the specification.
+**Reason.** Without a prefix, two producers can use the same key with different meanings. A domain name shows who defined a key, and FPDS needs no registry to issue names. If the specification defines keys under its own prefix, those keys become a second core without consultation. The first draft stated the medical restriction only in internal notes. `medical` is not in the core, so the restriction must be in the specification.
 
 **Alternatives considered.** Prefixes as a recommendation only. Producers then omit them.
 

@@ -1,25 +1,37 @@
 # Security and privacy
 
-FPDS is a document format. It has no servers, no runtime and no code that executes on your behalf, so the usual vulnerability surface does not apply here. Two things still do.
+FPDS is a document format. It has no servers, no runtime and no code that runs for you, so most types of vulnerability do not apply. Two types of problem still apply.
 
-## Reporting a schema defect with security impact
+## Report a schema defect with security or privacy impact
 
-A schema defect matters if it causes a conforming implementation to accept something it should reject, in a way that could mislead a consumer. For example: a constraint that permits an unverifiable claim to be marked `verified`, or a pattern that allows a `media` URL to carry an unexpected scheme.
+A schema defect has security impact if a conforming implementation accepts a document that it must reject, and the document can mislead a consumer. Two examples:
 
-Report these privately via GitHub's **Report a vulnerability** button on the Security tab, or to security@fpds.football. Expect an acknowledgement within five working days.
+- A rule that lets a producer mark a claim as `verified` without `verified_against`
+- A rule that lets a minor appear as the sender of their own submission
 
-Do not open a public issue for these until a fix is published.
+Report these defects privately. Use one of these methods:
 
-## Privacy properties implementers should know
+1. On GitHub, go to the **Security** tab and select **Report a vulnerability**. This method is better, because it keeps the report and the fix together.
+2. Send an email to `security@fpds.football`.
 
-FPDS documents contain personal data about identifiable individuals, frequently including minors. The format makes some deliberate choices about that, and they only hold if implementations respect them.
+You will receive an acknowledgement in five working days or less.
 
-**Medical information is availability status only.** `medical` carries a status and an expected return date. Diagnoses and injury history are out of scope because in most jurisdictions they are special-category health data, and a forwardable document is the wrong container for them. Do not put them in `extensions` either.
+Do not open a public issue about the defect until the fix is published.
 
-**`subject_is_minor` is computed, not asserted.** It is derived from `date_of_birth` against the submission date. Implementations that let a producer set it independently defeat the safeguarding routing it exists to enable.
+For a question about personal data in a consultation response, send an email to `privacy@fpds.football`.
 
-**`provenance` is not authentication.** It records who claimed something, not whether the claim is true and not that the named party actually sent the document. A submission naming a licensed agent is not evidence that the agent sent it. FPDS 0.1 defines no signing mechanism; whether it should is open question 3 in `SPEC.md`.
+## Privacy rules for implementers
 
-**Forwarding is the normal case and the main risk.** These documents travel by email and messaging. A submission that was lawful to send to one club is not automatically lawful to forward to five more. The `consent` block states the basis on which the data was shared, not a licence to redistribute it.
+FPDS documents contain personal data about people who can be identified. Often these people are minors. FPDS makes some decisions about this data. The decisions work only if implementations obey them.
 
-**Do not log whole documents.** Submissions combine identity, contract terms and consent state in a single object. Debug logs holding them become a data-protection problem quickly.
+**FPDS contains no medical data.** Diagnoses, injury details and medical history are special-category health data in most jurisdictions. A document that parties forward is the wrong place for them. `extensions` MUST NOT contain them either (§12 of `SPEC.md`).
+
+**Implementations calculate `is_minor`. Producers do not set it.** The value comes from `player.date_of_birth` on the date of `submission.submitted_at`. If an implementation lets a producer set it independently, submissions about minors do not go through their safeguarding process.
+
+**A minor cannot send their own submission.** The schema rejects a document where `is_minor` is `true` and `sender` is `player`.
+
+**Provenance is not authentication.** It records who made a claim. It does not show that the claim is true, and it does not show that the named party sent the document. A submission that names a licensed agent is not evidence that the agent sent it. FPDS 0.1 has no signature mechanism. This is open question OQ-3 in `SPEC.md`.
+
+**Parties forward submissions, and this is the main risk.** Submissions travel by email and by message. If it was lawful to send a submission to one club, it is not automatically lawful to forward it to five more clubs. The `consent` block states the lawful basis for the first share. It does not give permission to share the document again.
+
+**Do not log full documents.** A submission contains identity, contract status and consent in one object. A debug log that contains submissions is a data-protection problem.

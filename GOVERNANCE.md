@@ -1,43 +1,63 @@
 # Governance
 
-**Current status: benevolent dictator, openly stated.**
+**Current status: one maintainer, stated openly.**
 
-FPDS is maintained by one person. Decisions about the spec are made by that person, in public, on the basis of arguments made in Discussions. There is no committee, no vote and no neutral home.
+One person maintains FPDS. That person makes decisions about the specification in public, after public consultation. There is no committee, no vote and no neutral organisation.
 
-This is a weakness and it is documented here rather than hidden, because a standard controlled by a single vendor is a proprietary format in open-source clothing, and everyone evaluating FPDS deserves to know which one this currently is.
+This is a weakness. This file states it because a standard that one vendor controls is a proprietary format with an open-source licence. People who evaluate FPDS need to know which type of standard it is now.
 
 ## The conflict of interest
 
-The maintainer builds commercial software in this space. That creates an obvious incentive to shape the spec around one product's needs.
+The maintainer builds commercial software for football agents and clubs. This gives the maintainer a reason to change the specification to suit one product.
 
-Three commitments against that:
+The maintainer makes three commitments against this:
 
-1. **No field enters the core because one implementation wants it.** Extension keys exist for that. Promotion into the core requires evidence of independent convergence.
-2. **The spec carries no dependency on any product.** No hosted service, no registry, no identifier that has to be issued by anyone.
-3. **The licences are irrevocable.** Apache-2.0 and CC BY 4.0 mean a fork is always available if this stops being true. That is the real protection, and it is stronger than any promise in this file.
+1. **No field enters the core because one implementation wants it.** Extensions exist for that purpose. A field enters the core only when there is evidence that independent producers use it.
+2. **The specification does not depend on any product.** It needs no hosted service, no registry, and no identifier that a specific party issues.
+3. **The licences are irrevocable.** Apache 2.0 and CC BY 4.0 permit a fork at any time. If these commitments stop being true, a fork is the real protection, and it is stronger than any promise in this file.
 
-## Decision-making now
+## How decisions are made
 
-- Proposals are raised as Discussions and stay open for at least 14 days before any schema change lands.
-- Changes that affect required fields, remove fields or retype fields need a stated rationale in the changelog.
-- The maintainer's own proposals get the same 14 days and the same public thread. Objections that go unanswered are recorded in the discussion rather than closed.
+### Before the first tagged release
 
-## What would change this
+Before `v0.1.0`, the maintainer can change the draft directly. `DECISIONS.md` records each of these decisions with the label "Pre-release, maintainer decision", so that nobody mistakes them for consulted decisions.
 
-If FPDS reaches meaningful adoption — clubs asking for submissions in this format, more than one independent implementation in production — governance moves to a neutral home with commit rights held by more than one organisation.
+### After the first tagged release
 
-Meaningful adoption, concretely:
+After `v0.1.0`, every schema change needs a consultation. A consultation has three parts:
 
-- Three or more independent implementations passing the conformance suite
-- Two or more organisations that neither employ nor are employed by the maintainer using it in production
-- At least one club or league requesting submissions in the format
+- A page on `fpds.football` in plain English, with a form for agents, clubs, players and other parties
+- A GitHub Discussion for implementers
+- A published summary when the consultation closes
 
-At that point the sensible structures are a UK CIC, a lightweight foundation, or hosting under an existing sports-data body. Not before. An empty foundation with one contributor looks worse than an honest solo repository.
+These rules apply:
 
-## Interested in a seat at that table?
+- A consultation stays open for at least 14 days before a schema change lands.
+- The summary states the number of responses from each role, the main arguments and the decision with its reasons. The summary is anonymous by default.
+- A change that makes a field required, removes a field or changes the type of a field needs a stated reason in `DECISIONS.md`.
+- The proposals of the maintainer get the same 14 days and the same public process.
+- If an objection gets no answer, the summary records it. The maintainer does not delete it.
 
-Say so early, in a Discussion. Governance designed with the first few adopters is better than governance imposed on them afterwards.
+Social media posts can bring people to a consultation. The consultation page and the GitHub Discussion are the record. The maintainer copies relevant points from other channels into the record.
 
-## Versioning authority
+## What changes this
 
-Version numbers are assigned by the maintainer according to the semver rules in `README.md`. Published schema URLs under `https://fpds.football/schema/` are permanent and will not be repointed or removed, regardless of who maintains FPDS later. This is the single commitment that would be most damaging to break and the one that most deserves to be written down.
+If FPDS gets meaningful adoption, governance moves to a neutral organisation. More than one organisation then holds commit rights.
+
+Meaningful adoption means all of these:
+
+- Three or more independent implementations pass the conformance suite.
+- Two or more organisations use FPDS in production. These organisations do not employ the maintainer, and the maintainer does not employ them.
+- At least one club or league asks for submissions in FPDS format.
+
+At that time, suitable structures are a UK community interest company, a small foundation, or an existing sports-data organisation. These structures are not suitable before that time. An empty foundation with one contributor looks worse than an honest repository with one maintainer.
+
+## A place in future governance
+
+If you want a place in future governance, say so early, in a GitHub Discussion. Governance that the first adopters help to design is better than governance that is given to them later.
+
+## Version numbers and permanent URLs
+
+The maintainer assigns version numbers under the rules in `CHANGELOG.md`.
+
+Published schema URLs under `https://fpds.football/schema/` are permanent. Nobody will point them to a different file or remove them, including future maintainers. If this commitment breaks, it causes the most damage, so this file states it.

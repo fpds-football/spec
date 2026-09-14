@@ -1,81 +1,100 @@
+# Code of Conduct
 
-# Contributor Covenant Code of Conduct
+This code is an adaptation of the Contributor Covenant, version 2.1, in Simple English. The "Attribution" section at the end gives the source.
 
-## Our Pledge
+## Our promise
 
-We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, color, religion, or sexual identity and orientation.
+We are members, contributors and leaders of the FPDS community. We promise to make participation in our community free from harassment for all people.
 
-We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
+This promise applies to all people, regardless of:
 
-## Our Standards
+- age or body size
+- visible or invisible disability
+- ethnicity, race or caste
+- sex characteristics, gender identity and expression
+- level of experience or education
+- socio-economic status or nationality
+- personal appearance or colour
+- religion
+- sexual identity and orientation
 
-Examples of behavior that contributes to a positive environment for our community include:
+We promise to act in ways that make our community open, welcoming, diverse, inclusive and healthy.
 
-* Demonstrating empathy and kindness toward other people
-* Being respectful of differing opinions, viewpoints, and experiences
-* Giving and gracefully accepting constructive feedback
-* Accepting responsibility and apologizing to those affected by our mistakes, and learning from the experience
-* Focusing on what is best not just for us as individuals, but for the overall community
+## Our standards
 
-Examples of unacceptable behavior include:
+These types of behaviour help our community:
 
-* The use of sexualized language or imagery, and sexual attention or advances of any kind
-* Trolling, insulting or derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or email address, without their explicit permission
-* Other conduct which could reasonably be considered inappropriate in a professional setting
+- Show empathy and kindness to other people.
+- Respect opinions and experiences that are different from yours.
+- Give useful feedback, and accept feedback politely.
+- Accept responsibility for your mistakes. Apologise to the people that your mistakes affect, and learn from the experience.
+- Think about what is best for the full community, not only for yourself.
 
-## Enforcement Responsibilities
+These types of behaviour are not acceptable:
 
-Community leaders are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
+- Sexual language or images, and sexual attention or advances of any type
+- Trolling, insults, derogatory comments, and personal or political attacks
+- Harassment in public or in private
+- Publishing the private information of another person without their permission, for example a home address or an email address
+- Other behaviour that a reasonable person considers wrong in a professional setting
 
-Community leaders have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.
+## Responsibilities of community leaders
+
+Community leaders explain and enforce our standards of behaviour. If behaviour is inappropriate, threatening, offensive or harmful, community leaders take fair action to correct it.
+
+Community leaders can remove, edit or reject comments, commits, code, wiki edits, issues and other contributions that do not agree with this code. When it is appropriate, they give the reasons for their decisions.
 
 ## Scope
 
-This Code of Conduct applies within all community spaces, and also applies when an individual is officially representing the community in public spaces. Examples of representing our community include using an official e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event.
+This code applies in all community spaces, including consultation pages, forms and GitHub.
+
+It also applies when a person officially represents the community in public spaces. These are examples of official representation:
+
+- The person uses an official email address.
+- The person posts from an official social media account.
+- The person acts as a representative at an event.
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at conduct@fpds.football. All complaints will be reviewed and investigated promptly and fairly.
+Report abusive, harassing or unacceptable behaviour to the community leaders at `conduct@fpds.football`. The community leaders examine all complaints quickly and fairly.
 
-All community leaders are obligated to respect the privacy and security of the reporter of any incident.
+All community leaders must protect the privacy and safety of the person who makes the report.
 
-## Enforcement Guidelines
+## Enforcement guidelines
 
-Community leaders will follow these Community Impact Guidelines in determining the consequences for any action they deem in violation of this Code of Conduct:
+Community leaders use these guidelines to decide the result of a violation of this code.
 
 ### 1. Correction
 
-**Community Impact**: Use of inappropriate language or other behavior deemed unprofessional or unwelcome in the community.
+**Effect on the community:** Inappropriate language, or other behaviour that is unprofessional or unwelcome.
 
-**Consequence**: A private, written warning from community leaders, providing clarity around the nature of the violation and an explanation of why the behavior was inappropriate. A public apology may be requested.
+**Result:** A private, written warning from community leaders. The warning explains the violation and why the behaviour was inappropriate. The leaders can ask for a public apology.
 
 ### 2. Warning
 
-**Community Impact**: A violation through a single incident or series of actions.
+**Effect on the community:** A violation through one incident or a series of actions.
 
-**Consequence**: A warning with consequences for continued behavior. No interaction with the people involved, including unsolicited interaction with those enforcing the Code of Conduct, for a specified period of time. This includes avoiding interactions in community spaces as well as external channels like social media. Violating these terms may lead to a temporary or permanent ban.
+**Result:** A warning with results for more violations. For a specified time, the person must not interact with the people involved, including the people who enforce this code. This applies in community spaces and in external channels such as social media. If the person does not obey these conditions, the result can be a temporary or permanent ban.
 
-### 3. Temporary Ban
+### 3. Temporary ban
 
-**Community Impact**: A serious violation of community standards, including sustained inappropriate behavior.
+**Effect on the community:** A serious violation of community standards, including continued inappropriate behaviour.
 
-**Consequence**: A temporary ban from any sort of interaction or public communication with the community for a specified period of time. No public or private interaction with the people involved, including unsolicited interaction with those enforcing the Code of Conduct, is allowed during this period. Violating these terms may lead to a permanent ban.
+**Result:** A temporary ban from all interaction and public communication with the community, for a specified time. During this time, the person must not interact in public or in private with the people involved, including the people who enforce this code. If the person does not obey these conditions, the result can be a permanent ban.
 
-### 4. Permanent Ban
+### 4. Permanent ban
 
-**Community Impact**: Demonstrating a pattern of violation of community standards, including sustained inappropriate behavior, harassment of an individual, or aggression toward or disparagement of classes of individuals.
+**Effect on the community:** A pattern of violations of community standards. This includes continued inappropriate behaviour, harassment of a person, or aggression towards or disrespect of groups of people.
 
-**Consequence**: A permanent ban from any sort of public interaction within the community.
+**Result:** A permanent ban from all public interaction in the community.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 2.1, available at [https://www.contributor-covenant.org/version/2/1/code_of_conduct.html][v2.1].
+This code is adapted from the [Contributor Covenant][homepage], version 2.1, at [https://www.contributor-covenant.org/version/2/1/code_of_conduct.html][v2.1]. The Contributor Covenant uses the CC BY 4.0 licence. This adaptation changes the text to Simple English and adds consultation pages and forms to the scope.
 
-Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder][Mozilla CoC].
+The enforcement guidelines come from [the enforcement ladder in the Mozilla code of conduct][Mozilla CoC].
 
-For answers to common questions about this code of conduct, see the FAQ at [https://www.contributor-covenant.org/faq][FAQ]. Translations are available at [https://www.contributor-covenant.org/translations][translations].
+For answers to common questions about this code, see the FAQ at [https://www.contributor-covenant.org/faq][FAQ]. Translations of the original are at [https://www.contributor-covenant.org/translations][translations].
 
 [homepage]: https://www.contributor-covenant.org
 [v2.1]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
