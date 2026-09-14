@@ -10,7 +10,6 @@ FPDS uses three licences. Each licence covers a different part of this repositor
 | `examples/` | CC0 1.0 Universal | [`LICENSE-CC0`](LICENSE-CC0) |
 | `tests/conformance/` | CC0 1.0 Universal | [`LICENSE-CC0`](LICENSE-CC0) |
 | `SPEC.md` and all other Markdown files | Creative Commons Attribution 4.0 International | [`LICENSE-DOCS`](LICENSE-DOCS) |
-| `index.html` and `consult/` | Creative Commons Attribution 4.0 International | [`LICENSE-DOCS`](LICENSE-DOCS) |
 
 If a file is not in this table, the Apache License 2.0 applies.
 

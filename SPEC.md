@@ -346,7 +346,7 @@ Agents, clubs and other parties answer questions through the consultation pages 
 | ID | Question | v0.1.0 ships | Consultation |
 |---|---|---|---|
 | OQ-1 | Does FPDS need a level for each competition? Is a free integer sufficient, or is a league-strength index necessary? | No competition level | Not yet open |
-| OQ-2 | Is information about wages or salary in scope, or is it too commercially sensitive for a document that parties forward? | No wage fields | [Open](https://fpds.football/consult/wages) |
+| OQ-2 | Is information about wages or salary in scope, or is it too commercially sensitive for a document that parties forward? | No wage fields | [Open](https://fpds.football/consult/wages/) |
 | OQ-3 | Does FPDS need signed submissions, so that a club can make sure that a submission came from the agent that it names? | No signatures | GitHub Discussion |
 | OQ-4 | Do eligibility rules for each country (for example, GBE points in England) belong in the core, or in extensions? | No eligibility fields | Not yet open |
 | OQ-5 | Does FPDS define a receipt or rejection document, or is that a protocol? | No receipt document | GitHub Discussion |
@@ -358,8 +358,8 @@ Agents, clubs and other parties answer questions through the consultation pages 
 | OQ-11 | Does `asserted_by` need a structured format? | Free text | GitHub Discussion |
 | OQ-12 | Can a parent, a guardian or a club send a submission? | `intermediary` or `player` only | Not yet open |
 | OQ-13 | Do clubs need youth or academy categories in addition to `amateur`? | `amateur` only | Not yet open |
-| OQ-14 | Do release clauses and sell-on percentages belong in a submission? | No release clause or sell-on fields | [Open](https://fpds.football/consult/release-clauses) |
-| OQ-15 | Does a submission state medical availability, and where does availability end and health data start? | No medical fields | [Open](https://fpds.football/consult/medical-availability) |
+| OQ-14 | Do release clauses and sell-on percentages belong in a submission? | No release clause or sell-on fields | [Open](https://fpds.football/consult/release-clauses/) |
+| OQ-15 | Does a submission state medical availability, and where does availability end and health data start? | No medical fields | [Open](https://fpds.football/consult/medical-availability/) |
 | OQ-16 | Does a submission state contract extension options, and which party holds them? | No extension option field | Not yet open |
 | OQ-17 | Does a submission include links to video and scouting reports? | No media fields | Not yet open |
 | OQ-18 | Is the agent licence sufficient, or do clubs need the agency name and the mandate expiry date? | `agent_name`, `fifa_agent_licence`, `mandate_status` | Not yet open |

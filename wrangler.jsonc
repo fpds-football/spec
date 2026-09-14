@@ -1,11 +1,11 @@
-// Cloudflare Workers configuration for https://fpds.football. See DECISIONS.md D-30.
+// Cloudflare Workers configuration for https://fpds.football/schema/*. See DECISIONS.md D-30 and D-41.
 // Build command: sh scripts/build-site.sh
 // Deploy command: npx wrangler deploy
 {
   "name": "spec",
   "compatibility_date": "2026-09-14",
   "assets": {
-    // The build script puts only index.html, _headers, schema/ and consult/ in this directory.
+    // The build script puts only _headers and schema/ in this directory. A Cloudflare route sends fpds.football/schema/* to this Worker.
     "directory": "./_site"
   }
 }

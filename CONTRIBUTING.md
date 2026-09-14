@@ -115,7 +115,7 @@ This section is for the maintainer.
 
 ### Hosting
 
-The site at `https://fpds.football` uses Cloudflare Workers static assets. `wrangler.jsonc` contains the configuration.
+This repository publishes only the schema, at `https://fpds.football/schema/*`. It uses Cloudflare Workers static assets. `wrangler.jsonc` contains the configuration. `fpds-football/site` publishes all other paths. Its README gives its own steps.
 
 1. In Cloudflare, go to **Workers & Pages** and create an application.
 2. Select **Continue with GitHub**, then select the `fpds-football/spec` repository.
@@ -123,10 +123,10 @@ The site at `https://fpds.football` uses Cloudflare Workers static assets. `wran
 4. Set the build command to `sh scripts/build-site.sh`.
 5. Set the deploy command to `npx wrangler deploy`.
 6. Keep builds for non-production branches on. Pull requests then get a preview URL.
-7. After the first deployment, go to **Settings**, then **Domains & Routes**. Add `fpds.football` as a custom domain.
-8. Make sure that `https://fpds.football/schema/v0.1/player.json` returns the schema with the content type `application/schema+json`.
+7. After the first deployment, go to **Settings**, then **Domains & Routes**. Add a route: `fpds.football/schema/*`, on the zone `fpds.football`. Do not add a custom domain. The `fpds-site` Worker holds the custom domain.
+8. Make sure that `https://fpds.football/schema/v0.1/player.json` returns the schema with the content type `application/schema+json`, and that the file is identical to `schema/v0.1/player.json`.
 
-The site publishes only `index.html`, `schema/`, `consult/` and `_headers`. Do not publish the repository root. If you change the project name, change `name` in `wrangler.jsonc` too.
+This repository publishes only `_headers` and `schema/`. CI fails if the build contains any other path. If you change the project name, change `name` in `wrangler.jsonc` too.
 
 ### Email
 
@@ -149,8 +149,8 @@ Before launch, send a test message to each address.
 
 For each consultation:
 
-1. Make a page in `consult/` in Simple English, with no JSON.
-2. Make a Tally form with a privacy notice. Put the form on the page.
+1. In `fpds-football/site`, add the consultation to `src/content/consultations.ts`, in Simple English, with no JSON.
+2. Duplicate the Tally template form, and add the questions for the consultation. Put the form ID in the consultation entry.
 3. Open a GitHub Discussion that links to the ID in §14 of `SPEC.md`.
 4. Change the "Consultation" column in §14 to a link to the page.
 5. Keep the consultation open for at least 14 days.

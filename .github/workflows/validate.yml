@@ -71,9 +71,9 @@ jobs:
       - name: Build the site that Cloudflare publishes
         run: sh scripts/build-site.sh
 
-      - name: The site contains only the permitted paths
+      - name: The published files are only the schema and its headers
         run: |
-          unexpected=$(find _site -mindepth 1 -maxdepth 1 ! -name index.html ! -name _headers ! -name schema ! -name consult)
+          unexpected=$(find _site -mindepth 1 -maxdepth 1 ! -name _headers ! -name schema)
           if [ -n "$unexpected" ]; then
             echo "::error::unexpected paths in _site: $unexpected"
             exit 1

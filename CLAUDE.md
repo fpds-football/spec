@@ -86,7 +86,6 @@ All prose uses Simple English (ASD-STE100, pragmatic mode). Use the `simple-engl
 - Write descriptions with a maximum of 25 words in each sentence. Write instructions with a maximum of 20 words.
 - Do not use semicolons or contractions.
 - Put normative statements in `SPEC.md`. Put reasons in `DECISIONS.md`. Put opinion in a Discussion.
-- `index.html` follows the structural rules but keeps its headline voice.
 
 ## Open questions
 
@@ -97,8 +96,8 @@ Three consultations open at launch: wages (OQ-2), release clauses and sell-on pe
 ## Hosting and infrastructure
 
 - **The GitHub organisation is `fpds-football`.** Do not use `fpds`.
-- **The site uses Cloudflare Workers static assets, and the domain is registered at Cloudflare.** `wrangler.jsonc` contains the configuration. Do not assume GitHub Pages or Cloudflare Pages.
-- **The site publishes only `index.html`, `schema/`, `consult/` and `_headers`.** Do not publish the repository root.
+- **This repository publishes only `https://fpds.football/schema/*`** (D-41). A Cloudflare route sends those paths to the `spec` Worker. `wrangler.jsonc` contains the configuration. Do not assume GitHub Pages or Cloudflare Pages.
+- **`fpds-football/site` publishes every other path**, including the homepage, the consultations and the builder. Do not add pages to this repository.
 - **Consultation forms use Tally.** GitHub is the record, and the website is where non-technical people take part.
 - **Three repositories** (D-32). This repository holds the schema, the specification and the conformance suite. `fpds-football/fpds-ts` is the TypeScript validation library. `fpds-football/site` holds the website, the builder and the viewer.
 - **The builder and the viewer run only in the browser** (D-33 to D-37). Player data never goes to a server. Do not add a feature that sends player data over the network.

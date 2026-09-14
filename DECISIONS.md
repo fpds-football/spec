@@ -454,6 +454,8 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 - `wrangler.jsonc` in the repository contains the project name, the compatibility date and the assets directory `_site`.
 - The build step, the published paths and the `_headers` rules from D-5 do not change.
 
+D-41 later reduced the published paths to the schema only.
+
 **Reason.** Cloudflare now calls the Pages workflow "legacy", and Workers is the default for new projects. Workers static assets serve `_headers` in the same way as Pages. A configuration file in the repository keeps the deployment settings under version control, not only in the dashboard.
 
 **Alternatives considered.** Continue with the legacy Pages workflow. It works now, but it is not the direction of the platform. Put the settings as flags in the deploy command. The settings then exist only in the dashboard.
@@ -630,3 +632,19 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 **Reason.** `@fpds-football/fpds` gives field states, issues and provenance keys as JSON Pointers. TanStack Form uses paths such as `performance[0].minutes`. With TanStack Form, the builder must convert between the two kinds of path everywhere, and provenance keys contain `/` characters. A store by JSON Pointer uses one kind of key from the library to the screen. The builder also does not use the validation of a form library, because all rules come from `@fpds-football/fpds`.
 
 **Alternatives considered.** TanStack Form, as D-33 planned.
+
+### D-41. This repository publishes only the schema
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- `index.html` and `consult/` are removed from this repository. `fpds-football/site` holds them now (D-32).
+- The build publishes only `_headers` and `schema/`. CI fails if the build contains any other path.
+- The `spec` Worker has a route, `fpds.football/schema/*`, and no custom domain. The `fpds-site` Worker holds the custom domain `fpds.football`.
+- `_headers` has no Content Security Policy for pages, because this Worker serves no pages.
+
+**Reason.** The site now serves every path except `/schema/*`, so copies of the pages in this repository are never served, and they can drift from the real pages. When this repository publishes only the schema, a change to the website cannot affect the permanent schema URL.
+
+**Alternatives considered.** Keep the pages here as a fallback. Nobody can reach them, and two copies of the same text drift.
