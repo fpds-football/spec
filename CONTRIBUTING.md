@@ -119,7 +119,7 @@ The site at `https://fpds.football` uses Cloudflare Pages.
 
 1. In Cloudflare, create a Pages project from the `fpds-football/spec` repository.
 2. Set the production branch to `main`.
-3. Set the build command and the output directory. Step 5 of the launch plan adds the build script.
+3. Set the build command to `sh scripts/build-site.sh`, and the output directory to `_site`. Leave the framework preset empty.
 4. Add `fpds.football` as a custom domain for the project.
 5. Make sure that `https://fpds.football/schema/v0.1/player.json` returns the schema with the content type `application/schema+json`.
 

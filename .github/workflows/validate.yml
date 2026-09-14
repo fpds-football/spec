@@ -61,3 +61,23 @@ jobs:
             echo "::error::\$id is $actual, expected $expected"
             exit 1
           fi
+
+  site:
+    name: site build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the site that Cloudflare Pages publishes
+        run: sh scripts/build-site.sh
+
+      - name: The site contains only the permitted paths
+        run: |
+          unexpected=$(find _site -mindepth 1 -maxdepth 1 ! -name index.html ! -name _headers ! -name schema ! -name consult)
+          if [ -n "$unexpected" ]; then
+            echo "::error::unexpected paths in _site: $unexpected"
+            exit 1
+          fi
+
+      - name: The published schema is identical to the source
+        run: cmp schema/v0.1/player.json _site/schema/v0.1/player.json
