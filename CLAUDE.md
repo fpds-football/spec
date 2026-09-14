@@ -54,6 +54,7 @@ Do not argue against these unless the user asks. `DECISIONS.md` gives the reason
 - **Sixteen uppercase position codes.** They separate `CDM`, `CM` and `CAM`, and include `LCB` and `RCB`. "Centre mid" is not valid.
 - **`minutes` is required in each season record.** Per-90 figures are not stored.
 - **Seasons are `YYYY/YY` or `YYYY`.**
+- **Country codes are ISO 3166-1 alpha-3, plus `ENG`, `SCO`, `WAL`, `NIR` and `XKX`** (D-42). The schema contains the full list. Do not use FIFA codes for other countries.
 - **Dates and timestamps have patterns**, because `format` is only an annotation in many validators.
 - **`consent.is_minor` means less than 18 years old** on the date of `submitted_at`. Implementations calculate it from `date_of_birth`.
 - **Provenance is for each claim, with JSON Pointer keys.** A value without an entry has the sender as its source. Provenance is not authentication.

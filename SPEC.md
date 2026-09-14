@@ -46,9 +46,30 @@ These rules apply to the full document:
 - A document MUST NOT contain `null` as a value.
 - A date MUST use the format `YYYY-MM-DD` (ISO 8601). A timestamp MUST use the RFC 3339 format with a time zone, for example `2026-09-13T09:41:00Z`.
 - Producers MUST NOT put a local date format, such as `07/03/1998`, in a date field. Consumers SHOULD show dates in the local format of the reader.
-- A country code MUST be an ISO 3166-1 alpha-3 code in uppercase, for example `POL`.
+- A country code MUST be one of the codes in §3.1.
 - A document MUST be JSON encoded in UTF-8. Its media type is `application/json`.
 - When a document is stored or sent as a file, the file name SHOULD end with `.fpds.json`, for example `joao-costa-2026-09-14.fpds.json`. People and software can then recognise the file as an FPDS document.
+
+### 3.1 Country codes
+
+A country code is an ISO 3166-1 alpha-3 code in uppercase, for example `POL`, or one of these five football codes:
+
+| Code | Meaning |
+|---|---|
+| `ENG` | England |
+| `SCO` | Scotland |
+| `WAL` | Wales |
+| `NIR` | Northern Ireland |
+| `XKX` | Kosovo |
+
+England, Scotland, Wales and Northern Ireland have separate national teams, football associations and leagues, but ISO 3166-1 has one code for the United Kingdom. Kosovo is a FIFA member, but it has no ISO 3166-1 code. The schema contains the full list of permitted codes.
+
+These rules apply:
+
+- The sporting nationality, which is the first value in `nationalities`, SHOULD be the code of the national team that the player can represent. For a player who can represent England, this is `ENG`.
+- For a club or a competition in England, Scotland, Wales or Northern Ireland, `country` and `competition_country` SHOULD be the football code. For example, the country of the Premier League is `ENG`.
+- `GBR` is a valid code. A producer MAY use it, for example for a nationality that is not the sporting nationality.
+- FPDS does not use FIFA codes for other countries. For example, Germany is `DEU`, not `GER`.
 
 ## 4. Submission
 
@@ -370,3 +391,4 @@ Agents, clubs and other parties answer questions through the consultation pages 
 | OQ-23 | Does a submission include a physical profile, such as preferred foot and height? | No physical profile | Not yet open |
 | OQ-24 | Does a new version of a submission link to the version that it replaces? | No link between versions | GitHub Discussion |
 | OQ-25 | Does FPDS define a way to share a submission as a link, not as a file? | Files only | GitHub Discussion |
+| OQ-26 | Does FPDS use FIFA member association codes for all countries, not ISO 3166-1 codes? | ISO 3166-1 alpha-3, plus `ENG`, `SCO`, `WAL`, `NIR` and `XKX` | Not yet open |

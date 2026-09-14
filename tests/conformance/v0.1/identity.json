@@ -119,6 +119,92 @@
         }
       ],
       "valid": false
+    },
+    {
+      "description": "a home nation as the sporting nationality is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/nationalities",
+          "value": [
+            "ENG",
+            "IRL"
+          ]
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "Kosovo as XKX is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/nationalities",
+          "value": [
+            "XKX"
+          ]
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a three-letter code that is not a country is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/nationalities",
+          "value": [
+            "XYZ"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a FIFA code that is not in the list, such as GER, is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/nationalities",
+          "value": [
+            "GER"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a club country that is not in the list is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/current_club/country",
+          "value": "UKX"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a home nation as the competition country is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/performance/0/competition_country",
+          "value": "SCO"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a competition country that is not in the list is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/performance/0/competition_country",
+          "value": "EUR"
+        }
+      ],
+      "valid": false
     }
   ]
 }

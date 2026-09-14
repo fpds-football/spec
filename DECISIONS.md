@@ -648,3 +648,20 @@ D-41 later reduced the published paths to the schema only.
 **Reason.** The site now serves every path except `/schema/*`, so copies of the pages in this repository are never served, and they can drift from the real pages. When this repository publishes only the schema, a change to the website cannot affect the permanent schema URL.
 
 **Alternatives considered.** Keep the pages here as a fallback. Nobody can reach them, and two copies of the same text drift.
+
+### D-42. Country codes for football nations
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- A country code is an ISO 3166-1 alpha-3 code, or one of five football codes: `ENG`, `SCO`, `WAL`, `NIR` and `XKX` (Kosovo).
+- The schema contains the full list of 254 codes. A code that is not in the list is invalid.
+- The sporting nationality, a club country and a competition country SHOULD use the football code for England, Scotland, Wales and Northern Ireland. `GBR` stays valid.
+- FIFA codes for other countries, for example `GER` and `NED`, are not valid.
+- Open question OQ-26 asks whether FPDS uses FIFA codes for all countries.
+
+**Reason.** England, Scotland, Wales and Northern Ireland are separate football nations with separate leagues, but ISO 3166-1 has only `GBR`. Without the football codes, an English player and a Scottish player have the same sporting nationality, and the Premier League and the Scottish Premiership have the same country. Kosovo is a FIFA member without an ISO code. `XKX` is the code that the European Union and many data providers use. The schema checked only for three capital letters, so a code such as `XYZ` was valid, although the specification said MUST. The builder found this problem.
+
+**Alternatives considered.** FIFA codes for all countries. They are different from ISO codes for many countries, for example `GER` for Germany, so data providers that use ISO codes must convert every value. A separate field for the sporting nation. It adds a field without consultation.
