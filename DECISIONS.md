@@ -665,3 +665,23 @@ D-41 later reduced the published paths to the schema only.
 **Reason.** England, Scotland, Wales and Northern Ireland are separate football nations with separate leagues, but ISO 3166-1 has only `GBR`. Without the football codes, an English player and a Scottish player have the same sporting nationality, and the Premier League and the Scottish Premiership have the same country. Kosovo is a FIFA member without an ISO code. `XKX` is the code that the European Union and many data providers use. The schema checked only for three capital letters, so a code such as `XYZ` was valid, although the specification said MUST. The builder found this problem.
 
 **Alternatives considered.** FIFA codes for all countries. They are different from ISO codes for many countries, for example `GER` for Germany, so data providers that use ISO codes must convert every value. A separate field for the sporting nation. It adds a field without consultation.
+
+### D-43. Video links are in the core
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- A top-level `media` array is added. It is optional, and it is permitted for all values of `purposes`.
+- Each item has three required fields: `type`, `video_type` and `url`. No other field is permitted.
+- `type` has one value, `video`. `video_type` has two values, `highlights` and `full_match`.
+- `url` MUST start with `https://`, MUST contain a host, and MUST NOT contain user information. The schema enforces this with a pattern.
+- If `media` is present, it contains at least one item, and each item occurs only once.
+- A consumer SHOULD NOT open a link until a person selects it.
+- This entry answers open question OQ-17 for video, without consultation. Scouting reports become OQ-27. Other media types and item dates become OQ-28.
+- This entry changes one part of D-11, which put the first-draft `media` block outside the core. It is an exception to D-9.
+
+**Reason.** Clubs do not assess a player without video, so a submission without video links is not usable. The maintainer knows this from the industry, and a consultation cannot change the answer. `type` is a separate field, so that images or other media can become a new value later, as a minor version. `video_type` is required now, because a club treats highlights and a full match differently. If a later type such as `image` does not use `video_type`, that relaxation is also a minor version. `https` and the ban on user information stop producers from putting passwords in a document that parties forward. Links to platforms that need a login are permitted, because much professional video is on such platforms.
+
+**Alternatives considered.** Keep OQ-17 open and ship no media fields. Clubs then ask for video outside FPDS for every submission. A `videos` array without `type`. Images then need a second array. `type` with the values `highlights` and `full_match`. This mixes the kind of media with the content of a video. The first-draft `recorded_on` field. It is not necessary to open the video, so it goes to OQ-28. A list of permitted video hosts. Hosts change, and a list favours some platforms over others.

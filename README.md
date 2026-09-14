@@ -32,6 +32,7 @@ FPDS is a JSON Schema for one player submission. The core is small on purpose. I
 - **Contract.** Status, with FIFA definitions, expiry date and loan details.
 - **Representation.** The agent, the licence and the mandate.
 - **Performance.** Appearances and minutes, with goals, assists and clean sheets.
+- **Media.** Links to highlights and full-match video.
 - **Consent.** The lawful basis for sharing the data, and whether the player is a minor.
 - **Provenance.** The source of each claim.
 

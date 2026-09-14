@@ -18,7 +18,7 @@ The first public draft, version 0.1.0. It is not stable. Breaking changes are ex
 
 ### Added
 
-- A player submission document with ten top-level members. Six members are required, and `representation` is required when the sender is an intermediary.
+- A player submission document with eleven top-level members. Six members are required, and `representation` is required when the sender is an intermediary.
 - A `submission` block with `submission_id`, `submitted_at`, `purposes` and `sender`.
 - `submission_id`, a lowercase UUID. Each version of a document has its own ID, so a receiver can recognise a repeated or forwarded copy.
 - A checklist in §13 for conforming producers, and a recommended file name ending `.fpds.json`.
@@ -28,6 +28,7 @@ The first public draft, version 0.1.0. It is not stable. Breaking changes are ex
 - Five contract statuses with FIFA definitions: `under_contract`, `on_loan`, `amateur`, `free_agent` and `unknown`. Each status states which of `current_club`, `expiry_date` and `parent_club` are present.
 - A `representation` block with `mandate_status`, so that a submission states whether the sender has authority to make it.
 - Season records that require `minutes`, with `goals`, `assists` and `clean_sheets`. Seasons use `YYYY/YY` or `YYYY`.
+- A `media` array of links to video. Each item has `type` (`video`), `video_type` (`highlights` or `full_match`) and an `https` `url`. A URL with user information is invalid.
 - A `consent` block with `lawful_basis`, `consent_date` and `is_minor`. A minor is a person less than 18 years old.
 - Provenance for each claim, with keys that are JSON Pointers. The source `verified` requires `verified_against`. A value without an entry has the sender as its source.
 - An `extensions` object with keys that have a reverse-DNS prefix. The `football.fpds` prefix is reserved.
@@ -38,6 +39,6 @@ The first public draft, version 0.1.0. It is not stable. Breaking changes are ex
 
 ### Known open questions
 
-§14 of `SPEC.md` lists 26 open questions. Three consultations are open at launch: wages (OQ-2), release clauses and sell-on percentages (OQ-14), and medical availability (OQ-15).
+§14 of `SPEC.md` lists 28 questions. OQ-17 has an answer for video (D-43), and 27 questions are open. Three consultations are open at launch: wages (OQ-2), release clauses and sell-on percentages (OQ-14), and medical availability (OQ-15).
 
 [Unreleased]: https://github.com/fpds-football/spec/commits/main

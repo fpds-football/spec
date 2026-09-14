@@ -1,0 +1,188 @@
+{
+  "description": "Media links (SPEC section 9.3)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "a document with highlights and a full match video is accepted",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "media is optional",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/media"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a link that needs a login or has a query string is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/url",
+          "value": "https://platform.example:8443/clips/view?id=4411&t=12"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "an empty media array is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media",
+          "value": []
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a repeated media item is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/1",
+          "value": {
+            "type": "video",
+            "video_type": "highlights",
+            "url": "https://video.example/wojcik-highlights-2025-26"
+          }
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an http URL is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/url",
+          "value": "http://video.example/wojcik-highlights-2025-26"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a URL with user information is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/url",
+          "value": "https://agent:secret@video.example/wojcik"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a URL without a host is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/url",
+          "value": "https:///wojcik"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a URL with a space is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/url",
+          "value": "https://video.example/wojcik highlights"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "text that is not a URL is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/url",
+          "value": "ask the agent for the video"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the media type image is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/type",
+          "value": "image"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the video type fullmatch is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/video_type",
+          "value": "fullmatch"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the video type clip is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/media/0/video_type",
+          "value": "clip"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a media item without a type is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/media/0/type"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a video without a video type is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/media/0/video_type"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a media item without a URL is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/media/0/url"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the first-draft field recorded_on is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/media/0/recorded_on",
+          "value": "2026-03-08"
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

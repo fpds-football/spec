@@ -19,7 +19,7 @@ FPDS does not define transport, authentication, sessions or acknowledgements. It
 1. **Every number has its denominator.** Output without minutes is not information.
 2. **Provenance is a field, not metadata.** A submission states who made each claim, and when.
 3. **Unknown is a value, not a gap.** A required field that can be unknown has the value `unknown`. A missing optional field means "not stated". `null` is not a value in FPDS.
-4. **The core is small, and extensions are open.** The core contains only the fields that FPDS cannot work without. New fields enter the core after public consultation.
+4. **The core is small, and extensions are open.** The core contains only the fields that FPDS cannot work without. After v0.1.0, new fields enter the core after public consultation.
 5. **FPDS uses existing identifiers and definitions.** It uses FIFA Connect identifiers and FIFA definitions where they exist. It does not issue new player identifiers.
 
 ## 3. Document structure
@@ -35,6 +35,7 @@ A submission is one JSON object with these members:
 | `contract` | yes | The contract status of the player | §7 |
 | `representation` | when the sender is `intermediary` | The agent and the mandate | §8 |
 | `performance` | no | Season records | §9 |
+| `media` | no | Links to video of the player | §9.3 |
 | `consent` | yes | The lawful basis for sharing the data | §10 |
 | `provenance` | no | The source of each claim | §11 |
 | `extensions` | no | Fields that are not in the core | §12 |
@@ -243,6 +244,32 @@ The separator is a slash. In the `YYYY/YY` format, the second part MUST be the y
 
 `clean_sheets` is the number of appearances in which the team of the player conceded no goals while the player was on the pitch. It applies to all positions.
 
+### 9.3 Media
+
+`media` is a top-level array of links to video of the player. Clubs do not assess a player without video. Each item has these fields:
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | enum | yes | `video`. |
+| `video_type` | enum | yes | `highlights` or `full_match`. |
+| `url` | string | yes | The address of the video. |
+
+| `video_type` | Meaning |
+|---|---|
+| `highlights` | A video that contains selected actions of the player from one or more matches. |
+| `full_match` | A video of a full match in which the player played. |
+
+These rules apply:
+
+- If `media` is present, it MUST contain at least one item. Each item MUST occur only once.
+- `url` MUST start with `https://` and MUST contain a host. It MUST NOT contain spaces.
+- `url` MUST NOT contain user information, for example `https://name:password@host`. A document is forwarded, so a password in a link is shared with every receiver.
+- A link can go to a platform that needs a login. The producer SHOULD use a link that the receiver can open.
+- `media` is permitted for all values of `purposes`.
+- A consumer SHOULD NOT open a `url` or load its content until a person selects the link. The host of the video can see each request.
+
+A link does not prove that the video shows the player. `provenance` can state who supplied a link, as for any other value.
+
 ## 10. Consent and minors
 
 | Field | Type | Required | Notes |
@@ -382,7 +409,7 @@ Agents, clubs and other parties answer questions through the consultation pages 
 | OQ-14 | Do release clauses and sell-on percentages belong in a submission? | No release clause or sell-on fields | [Open](https://fpds.football/consult/release-clauses/) |
 | OQ-15 | Does a submission state medical availability, and where does availability end and health data start? | No medical fields | [Open](https://fpds.football/consult/medical-availability/) |
 | OQ-16 | Does a submission state contract extension options, and which party holds them? | No extension option field | Not yet open |
-| OQ-17 | Does a submission include links to video and scouting reports? | No media fields | Not yet open |
+| OQ-17 | Does a submission include links to video and scouting reports? | Answered for video by D-43: `media` with `highlights` and `full_match` videos (§9.3). OQ-27 asks about scouting reports. | Answered without consultation |
 | OQ-18 | Is the agent licence sufficient, or do clubs need the agency name and the mandate expiry date? | `agent_name`, `fifa_agent_licence`, `mandate_status` | Not yet open |
 | OQ-19 | Does a submission include the common name or shirt name of the player? | Full name only | Not yet open |
 | OQ-20 | Does a submission state commercial terms, such as asking price, loan fee and availability date? | `purposes` only | Not yet open |
@@ -392,3 +419,5 @@ Agents, clubs and other parties answer questions through the consultation pages 
 | OQ-24 | Does a new version of a submission link to the version that it replaces? | No link between versions | GitHub Discussion |
 | OQ-25 | Does FPDS define a way to share a submission as a link, not as a file? | Files only | GitHub Discussion |
 | OQ-26 | Does FPDS use FIFA member association codes for all countries, not ISO 3166-1 codes? | ISO 3166-1 alpha-3, plus `ENG`, `SCO`, `WAL`, `NIR` and `XKX` | Not yet open |
+| OQ-27 | Does a submission include links to scouting reports? | No scouting report links | Not yet open |
+| OQ-28 | Does `media` include other types, such as images? Does an item need a date, a season or a competition? | `video` only, with `type`, `video_type` and `url` | Not yet open |

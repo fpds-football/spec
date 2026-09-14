@@ -52,6 +52,7 @@ Do not argue against these unless the user asks. `DECISIONS.md` gives the reason
 - **`submission.sender` is `intermediary` or `player`.** `representation` is required for an intermediary. A minor cannot be the sender.
 - **Five contract statuses with FIFA definitions:** `under_contract`, `on_loan`, `amateur`, `free_agent`, `unknown`. §7.2 of `SPEC.md` states which fields each status permits.
 - **Sixteen uppercase position codes.** They separate `CDM`, `CM` and `CAM`, and include `LCB` and `RCB`. "Centre mid" is not valid.
+- **`media` holds video links** (D-43). Each item has `type` (`video` only), `video_type` (`highlights` or `full_match`) and an `https` `url`. It is permitted for all purposes. Images are OQ-28.
 - **`minutes` is required in each season record.** Per-90 figures are not stored.
 - **Seasons are `YYYY/YY` or `YYYY`.**
 - **Country codes are ISO 3166-1 alpha-3, plus `ENG`, `SCO`, `WAL`, `NIR` and `XKX`** (D-42). The schema contains the full list. Do not use FIFA codes for other countries.
