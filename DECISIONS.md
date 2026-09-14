@@ -243,6 +243,8 @@ The removal of some fields has a specific reason:
 3. Each provenance key resolves to a value in the same document.
 4. `extensions` values contain no diagnoses, injury details or medical history.
 
+D-38 later added a rule about secondary positions. D-39 later removed the medical rule from this list.
+
 **Reason.** Project policy says that a `MUST` needs enforcement. Where the schema cannot enforce a rule, the specification states which party enforces it. One list makes these rules easy to find and to test.
 
 **Alternatives considered.** Keep these rules in their sections only. They are then easy to miss.
@@ -592,7 +594,7 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 
 - §13 defines a producer and gives a checklist of steps for a conforming producer.
 - §11 no longer refers to a sender who types a submission by hand.
-- §13.1 adds rule 5: `secondary_positions` does not contain the primary position.
+- §13.1 adds rule 5: `secondary_positions` does not contain the primary position. After D-39, this rule is rule 4.
 - §3 states that a document is UTF-8 JSON with the media type `application/json`, and that a file name SHOULD end with `.fpds.json`.
 - §14 adds OQ-24 and OQ-25.
 - `README.md` has a section: "How do I create an FPDS-conforming document?"
@@ -600,3 +602,20 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 **Reason.** An agent first asks how to make a document that conforms. The specification did not answer. The builder prevents a secondary position that repeats the primary position, so the specification must agree. JSON Schema can express that rule only with sixteen conditions, so it is in §13.1. A file name that people recognise helps in email and messages. It is not a MUST, because FPDS does not define transport.
 
 **Alternatives considered.** "Compliant" in place of "conforming". §13 already defines "conforming", and one word has one meaning.
+
+### D-39. Minor status details, and the medical rule
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- §10.1 states that the date of `submitted_at` is the calendar date in the timestamp, with the time zone offset that the timestamp states.
+- §10.1 states that a player becomes 18 at the start of their 18th birthday. A player born on 29 February becomes 18 on 1 March in a year that is not a leap year.
+- The rule about medical information in `extensions` leaves the list in §13.1. §12 makes the producer responsible for it. A consumer or validator MAY show a warning, and a warning does not make a document invalid.
+- The producer checklist in §13 has a step for the medical rule.
+- The rule about secondary positions becomes rule 4 in §13.1.
+
+**Reason.** The first implementation, `fpds-ts`, found these gaps. Without a stated time zone and a stated leap-day rule, two implementations can calculate a different minor status for the same document. 1 March keeps the player a minor for longer, which is the safer choice for safeguarding. §13.1 said that implementations MUST enforce the medical rule, but software cannot decide with certainty whether text contains medical information. A MUST that nobody can enforce is not a real requirement.
+
+**Alternatives considered.** 28 February for a birthday on 29 February. It ends the protection of a minor one day earlier. The date of `submitted_at` in UTC. It gives a different date from the date that the producer wrote. Keep the medical rule in §13.1 with a keyword check. A keyword check gives false results in the two directions.

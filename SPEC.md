@@ -238,6 +238,12 @@ A minor is a person who is less than 18 years old. This agrees with Article 19 o
 
 `is_minor` MUST be `true` if the player is less than 18 years old on the date of `submission.submitted_at`. Otherwise it MUST be `false`. The producer MUST calculate `is_minor` from `player.date_of_birth`. The producer MUST NOT set it independently.
 
+These rules apply to the calculation:
+
+- The date of `submitted_at` is the calendar date in the timestamp, with the time zone offset that the timestamp states. For example, the date of `2026-09-14T23:30:00-05:00` is 14 September 2026.
+- A player becomes 18 years old at the start of their 18th birthday.
+- A player born on 29 February becomes 18 years old on 1 March, when the year of their 18th birthday is not a leap year. On 28 February of that year, the player is still a minor.
+
 A minor MUST NOT send their own submission, so `sender` MUST NOT be `player` when `is_minor` is `true`. Profiles of minors that go directly to clubs are a safeguarding risk.
 
 FIFA regulations on the protection of minors and national safeguarding rules apply to submissions about minors. FPDS does not encode those rules. Implementations that process data about minors need their own legal advice. The `is_minor` flag lets systems send these submissions through a different process.
@@ -284,8 +290,10 @@ Consumers SHOULD show the source of each value. If a consumer shows a verified v
 - The field name MUST start with a lowercase letter. It contains only lowercase letters, digits and underscores.
 - The domain name SHOULD be a domain that the producer controls.
 - A key MUST NOT start with the reserved prefix `football.fpds`.
-- `extensions` MUST NOT contain diagnoses, injury details or medical history. A value that states only whether a player is available is permitted.
+- A producer MUST NOT put diagnoses, injury details or medical history in `extensions`. A value that states only whether a player is available is permitted.
 - Consumers MUST ignore extension keys that they do not recognise.
+
+Software cannot always decide whether a value contains medical information, so the producer is responsible for the medical rule. A consumer or a validator MAY show a warning when an extension appears to contain medical information. A warning does not make a document invalid.
 
 This example shows two producers with fields of the same name:
 
@@ -308,8 +316,9 @@ A **conforming producer** makes documents that are valid against the published s
 2. Make a new `submission_id` and set `submitted_at` to the current time (§4.3).
 3. Calculate `consent.is_minor` from `player.date_of_birth` and `submitted_at` (§10.1).
 4. Remove each field that does not apply, for example `expiry_date` for a `free_agent` (§7.2).
-5. Validate the document against the schema and the rules in §13.1.
-6. Write the document as UTF-8 JSON (§3).
+5. Make sure that `extensions` contains no medical information (§12).
+6. Validate the document against the schema and the rules in §13.1.
+7. Write the document as UTF-8 JSON (§3).
 
 If a producer changes a document that it received or made before, it does all the steps again. Step 2 then gives the changed document a new `submission_id`.
 
@@ -319,13 +328,14 @@ A validator MUST treat the `format` keywords `date` and `date-time` in the schem
 
 ### 13.1 Rules that the schema cannot enforce
 
-JSON Schema cannot express these rules. A conforming implementation MUST enforce each one.
+JSON Schema cannot express these rules. Software can check each rule with certainty. A conforming implementation MUST enforce each one.
 
 1. `consent.is_minor` agrees with `player.date_of_birth` on the date of `submission.submitted_at` (§10.1).
 2. In a `YYYY/YY` season, the second part is the year after the first part (§9.1).
 3. Each key in `provenance` resolves to a value in the same document (§11.1).
-4. `extensions` contains no diagnoses, injury details or medical history (§12).
-5. `positions.secondary_positions` does not contain the value of `positions.primary_position` (§6).
+4. `positions.secondary_positions` does not contain the value of `positions.primary_position` (§6).
+
+The rule about medical information in `extensions` is not in this list, because software cannot check it with certainty. §12 makes the producer responsible for it.
 
 ## 14. Open questions
 

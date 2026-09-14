@@ -63,8 +63,11 @@ The suite tests only what JSON Schema can express. §13.1 of `SPEC.md` lists the
 1. `consent.is_minor` agrees with `player.date_of_birth` on the date of `submission.submitted_at`.
 2. In a `YYYY/YY` season, the second part is the year after the first part.
 3. Each key in `provenance` resolves to a value in the same document.
-4. `extensions` contains no diagnoses, injury details or medical history.
-5. `positions.secondary_positions` does not contain the primary position.
+4. `positions.secondary_positions` does not contain the primary position.
+
+Rule 1 includes the details in §10.1: the date of `submitted_at` uses the time zone offset in the timestamp, and a player born on 29 February becomes 18 on 1 March in a year that is not a leap year.
+
+The suite also does not test the rule about medical information in `extensions`. Software cannot check that rule with certainty, so §12 makes the producer responsible for it.
 
 These rules belong in the test suites of implementations. If many implementations make the same checks, that is a reason to find a way to put the checks in the schema.
 
