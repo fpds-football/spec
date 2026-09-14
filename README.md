@@ -71,7 +71,7 @@ If a value has no entry, its source is the sender. That is `agent_stated` for an
 You do not write FPDS by hand. Software makes the document for you.
 
 - **Agents and players.** Use the free [builder](https://fpds.football/build/). You fill in a form, and the builder makes a file that ends with `.fpds.json`. You send the file by email or message, as you send a PDF now. Your data stays in your browser.
-- **Clubs.** A free viewer on [fpds.football](https://fpds.football) is in development. You open the file, and the viewer shows the player, the source of each value, and any problems with the file.
+- **Clubs.** Open the file in the free [viewer](https://fpds.football/view/). The viewer shows the player, the source of each value, and any problems with the file. The file never leaves your browser.
 - **Software providers.** Implement the schema now. §13 of [`SPEC.md`](SPEC.md) gives the steps for a conforming producer. Run the cases in [`tests/conformance/`](tests/conformance/) against your implementation. [`@fpds-football/fpds`](https://www.npmjs.com/package/@fpds-football/fpds) is a TypeScript library that validates documents.
 
 A valid document has the correct structure. It does not prove that the information is true. The provenance of each value shows who made the claim.
