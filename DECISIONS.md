@@ -1,0 +1,391 @@
+# Decisions
+
+This file records why FPDS is the way it is. `CHANGELOG.md` records what changed. This file records the reasons.
+
+Each entry has an ID, a date, a status, the decision, the reason, and the alternatives that were considered. An ID is permanent. If a later decision replaces an entry, the old entry stays and its status changes to "Superseded by D-n".
+
+## Status labels
+
+- **Pre-release, maintainer decision.** The maintainer made this decision before the first tagged release, without public consultation. `GOVERNANCE.md` permits this before v0.1.0. Consultation can reopen any of these decisions.
+- **Consulted.** The decision followed a public consultation. The entry links to the consultation summary.
+- **Superseded.** A later entry replaces this decision.
+
+---
+
+## Process and repository
+
+### D-1. Fix the draft before the first tag
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** Version 0.1.0 is not released. All known defects are corrected in 0.1.0 before the `v0.1.0` tag.
+
+**Reason.** Nothing is published. The domain does not resolve, there are no tags, and nobody has built against the schema. Schema `$id` URLs become permanent at the first tag. It is better that the permanent URL starts with a correct schema.
+
+**Alternatives considered.** Tag now, then release the corrections as 0.1.1 and 0.2.0. This carries known defects into a permanent URL for no benefit.
+
+### D-2. The GitHub organisation is `fpds-football`
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** The repository is `github.com/fpds-football/spec`. Sibling implementations are `fpds-football/fpds-ts` and `fpds-football/fpds-py`.
+
+**Reason.** The git remote already uses `fpds-football`. Some files used `fpds`. Links in `CHANGELOG.md` become permanent at the first tag, so one name must apply everywhere.
+
+**Alternatives considered.** The `fpds` organisation. It is not the organisation that exists.
+
+### D-3. Three licences
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** The schema and code use Apache License 2.0. The specification text, other Markdown files and the website use CC BY 4.0. The examples and conformance fixtures use CC0 1.0. `LICENSING.md` maps each path to its licence.
+
+**Reason.** Apache 2.0 includes a patent grant, which protects implementers. CC BY 4.0 lets anyone republish the text with credit. Implementers copy examples and fixtures into their own test suites, and CC0 removes all attribution requirements for that use.
+
+**Alternatives considered.** Apache 2.0 for the examples and fixtures. This adds notice requirements to files that have nothing to protect.
+
+### D-4. All prose uses Simple English
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** All prose follows ASD-STE100 Simplified Technical English in pragmatic mode. Existing text is rewritten too. Three exceptions apply:
+
+1. RFC 2119 keywords in capitals (`MUST`, `SHOULD`, `MAY`) stay. They are technical terms. Lowercase "should", "may" and "could" are replaced.
+2. Spelling is British. This agrees with field names such as `fifa_agent_licence`.
+3. `index.html` follows the structural rules but keeps its headline voice.
+
+**Reason.** Many readers of FPDS are not native English speakers, and many are not technical. Short sentences with one meaning per word translate well. The RFC 2119 exception keeps normative levels exact. A change from `SHOULD` to "must" changes the obligation.
+
+**Alternatives considered.** American spelling, as the standard specifies. One spelling across prose and schema is more important.
+
+### D-5. Host the site on Cloudflare Pages
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** The site deploys through the Cloudflare Pages Git integration from `main`. A build step copies only `index.html`, `schema/`, `consult/` and a `_headers` file into `_site/`. Schema files have the content type `application/schema+json` and the header `Access-Control-Allow-Origin: *`. Before the tag, the cache time is short. The GitHub Pages workflow, `CNAME` and `.nojekyll` are removed.
+
+**Reason.** The domain is registered at Cloudflare. The Git integration needs no API token in GitHub. A build step that copies files from the repository means the published schema cannot drift from the source. Publishing only named paths keeps internal files such as `CLAUDE.md` and `tests/` off the site.
+
+**Alternatives considered.** GitHub Pages, which the original additions assumed. A GitHub Action that deploys with `wrangler`, which needs a stored Cloudflare token.
+
+### D-6. The 14-day rule starts at the first tag
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** Before `v0.1.0`, the maintainer can change the draft directly. After `v0.1.0`, every schema change needs a consultation that stays open for at least 14 days. A consultation is the website page, the form and the GitHub Discussion together (see D-23). This file records every decision, and pre-release decisions carry their own label.
+
+**Reason.** The 14-day rule protects people who depend on the specification. Before the first release, nobody depends on it. A public record of the reasons keeps the pre-release work open to examination.
+
+**Alternatives considered.** Apply the rule now, with a Discussion for each decision and a wait of 14 days. There is no audience yet to read those Discussions.
+
+### D-7. Contact addresses
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** Three addresses forward through Cloudflare Email Routing: `conduct@fpds.football`, `security@fpds.football` and `privacy@fpds.football`. `SECURITY.md` lists GitHub private security advisories first and the email address second. Before launch, the maintainer sends a test message to each address.
+
+**Reason.** `CODE_OF_CONDUCT.md` and `SECURITY.md` already name two of these addresses. A reporting address that does not work is worse than no address. The consultation forms collect personal data, so the privacy notice needs a contact.
+
+**Alternatives considered.** A general `hello@` address. General contact goes through the consultation pages and GitHub instead.
+
+### D-8. Remove `APPLY.md`
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** `APPLY.md` is deleted. Its lasting content moves to a "Maintaining" section in `CONTRIBUTING.md`.
+
+**Reason.** `APPLY.md` was a one-time instruction for an archive of additions. Most of it is now incorrect, because it describes GitHub Pages and the `fpds` organisation.
+
+**Alternatives considered.** Keep it as a historical record. The git history does this.
+
+---
+
+## Scope
+
+### D-9. Start with a small core, and add after consultation
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** FPDS starts with the smallest useful core. When a decision needs input from the football industry, v0.1.0 ships the smaller or stricter option. The question goes to §14 of `SPEC.md`.
+
+**Reason.** Semantic versioning makes this choice safe in one direction only. To add a field, add an enum value or relax a constraint is a minor version. To remove a field, remove an enum value or tighten a constraint is a major version. If v0.1.0 is small and strict, every result of consultation is a minor version.
+
+**Alternatives considered.** Decide each case separately. This produces inconsistent results and fields that cannot be removed later.
+
+### D-10. Open questions live in §14, with IDs
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** §14 of `SPEC.md` is the only list of open questions. Each question has an ID (`OQ-1`, `OQ-2`, and so on) and a line that states what v0.1.0 ships until the question is answered. Each consultation page and each GitHub Discussion links to its ID. They do not copy the text of the question.
+
+**Reason.** One list cannot drift from itself. The "v0.1.0 ships" line tells implementers what to do now.
+
+**Alternatives considered.** A separate `CONSULTATION.md`. This makes a second list to keep synchronised with the normative text.
+
+### D-11. The v0.1.0 core fields
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** The core has these fields:
+
+| Member | Fields |
+|---|---|
+| (top level) | `fpds_version` |
+| `submission` | `submission_id`, `submitted_at`, `purposes` |
+| `player` | `full_name`, `date_of_birth`, `nationalities`, `current_club.name`, `current_club.country`, `external_ids.fifa_connect_id` |
+| `positions` | `primary_position`, `secondary_positions` |
+| `contract` | `status`, `expiry_date`, `parent_club.name`, `parent_club.country` |
+| `representation` | `agent_name`, `fifa_agent_licence`, `mandate_status` |
+| `performance[]` | `season`, `competition`, `competition_country`, `appearances`, `minutes`, `goals`, `assists`, `clean_sheets` |
+| `consent` | `lawful_basis`, `consent_date`, `is_minor` |
+| (top level) | `provenance`, `extensions` |
+
+A field is in the core only if FPDS does not work without it. That is, the document is unusable without the field, or the field carries a design principle: output with minutes, provenance, and the protection of minors.
+
+These fields and blocks from the first draft are not in the core. Each is a candidate for consultation:
+
+- The `availability` block: `available_for`, `available_from`, `asking_price`, `loan_fee`, `wage_contribution_expected`
+- The `eligibility` block: `passports`, `work_permit_required`, `gbe_points`, `homegrown_status`, `international_caps`
+- The `medical` block: `current_status`, `expected_return_date`
+- The `media` block: `type`, `url`, `recorded_on`
+- `contract.release_clause`, `contract.sell_on_percentage`, `contract.option_to_extend`, and the `money` definition
+- `representation.agency`, `representation.mandate_expiry`
+- `player.known_as`, `player.preferred_foot`, `player.height_cm`, `current_club.competition`, `current_club.id`
+- `external_ids.transfermarkt_id`, `external_ids.wyscout_id`, `external_ids.opta_id`
+- `performance[].competition_tier`, `performance[].starts`
+- `submission.note`
+
+**Reason.** The first draft had 64 fields and described itself as "twenty-ish". Each field in v0.1.0 is a permanent commitment until a major version. A small core also gives each later addition its own consultation.
+
+The removal of some fields has a specific reason:
+
+- Vendor identifiers put commercial products in the core, against `GOVERNANCE.md` commitment 2. `fifa_connect_id` stays, because design principle 5 follows FIFA identifiers.
+- `gbe_points` and `homegrown_status` apply to England only. `work_permit_required` does not say which country. They answer open question 4 before consultation, and they conflict with `GOVERNANCE.md` commitment 1.
+- `release_clause`, `sell_on_percentage` and `asking_price` are commercially sensitive, in the same class as the wage question.
+- `submission.note` is free text, which is the problem that FPDS exists to remove.
+
+**Alternatives considered.** A 36-field core that kept `known_as`, the contract terms, the full `representation` block, `medical` and `media`. The maintainer chose a smaller set, so that the industry decides these fields through consultation.
+
+### D-12. `clean_sheets` is in the core
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** `performance[].clean_sheets` is the number of appearances in which the team of the player conceded no goals while the player was on the pitch. It applies to all positions. Like `goals` and `assists`, it requires `minutes`.
+
+**Reason.** Without this field, the performance record describes only outfield players. The definition makes the value objective, so provenance can mark it as verified. Data providers use different definitions, so the specification must state one.
+
+**Alternatives considered.** A goalkeeper-only field. A centre-back's clean sheets also have meaning. `goals_conceded` and `saves` are candidates for consultation.
+
+---
+
+## Field rules
+
+### D-13. Dates are single ISO 8601 values
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** `date_of_birth` is one string in `YYYY-MM-DD` format. Every date field in the schema has the pattern `^[0-9]{4}-[0-9]{2}-[0-9]{2}$` in addition to `format: date`. Producers MUST NOT put a local date format such as `07/03/1998` in a date field. Consumers show dates in the local format of the reader.
+
+**Reason.** An ISO date has one meaning. Confusion between day and month occurs only when a date is shown, not when it is stored. In JSON Schema 2020-12, `format` is an annotation by default, so many validators accept `07/03/1998`. The pattern makes all validators reject it.
+
+**Alternatives considered.** Separate fields for birth year, birth month and birth day. Three integers accept 30 February unless the schema adds complex rules. Consumers must also rebuild the date to calculate `is_minor`. Partial dates of birth are open question OQ-6.
+
+### D-14. Unknown is a value, not a gap
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** Design principle 3 changes from "Absence is explicit" to "Unknown is a value, not a gap":
+
+- A required field that can be unknown has the enum value `unknown`.
+- A missing optional field means "not stated". Consumers MUST NOT infer anything from its absence.
+- `null` is not valid anywhere in a document.
+
+**Reason.** The first draft said that `null` with a reason is better than a missing key. The schema did not permit `null` and had no field for a reason. The schema already used `unknown` enum values, so the principle now agrees with the schema.
+
+**Alternatives considered.** Permit `null` with a reason. This adds a new mechanism to a draft that is intended to be small. The difference between "not disclosed" and "not known" is open question OQ-7.
+
+### D-15. Two season formats
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** `season` accepts `YYYY/YY` for a season that crosses two calendar years, and `YYYY` for a calendar-year season. The separator is a slash only. In the `YYYY/YY` format, the second part MUST be the year after the first part.
+
+**Reason.** Many leagues play in calendar years, for example in Brazil, the United States, Norway, Sweden, Japan and Ireland. One submission can contain seasons of both types. A hyphen makes the value look like an ISO date.
+
+**Alternatives considered.** The `YYYY/YY` format only. This excludes calendar-year leagues.
+
+### D-16. Rules that implementations must enforce
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** §13 of `SPEC.md` lists the rules that JSON Schema cannot express. A conforming implementation MUST enforce each rule. The list contains:
+
+1. `consent.is_minor` agrees with `date_of_birth` on the date of `submission.submitted_at`.
+2. In a `YYYY/YY` season, the second part is the year after the first part.
+3. Each provenance key resolves to a value in the same document.
+4. `extensions` values contain no diagnoses, injury details or medical history.
+
+**Reason.** Project policy says that a `MUST` needs enforcement. Where the schema cannot enforce a rule, the specification states which party enforces it. One list makes these rules easy to find and to test.
+
+**Alternatives considered.** Keep these rules in their sections only. They are then easy to miss.
+
+### D-17. `purposes` is an array
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** `submission.purpose` (a string) becomes `submission.purposes` (an array with at least one unique item). The values are `permanent_transfer`, `loan`, `trial` and `information_only`. `information_only` cannot occur with another value. The value `free_agent_offer` is removed. The word "registration" is removed from the scope in §1.
+
+**Reason.** "Available on loan or permanent" is a common offer, and one value cannot express it. "Free agent" is a contract status, not a type of deal, and `contract.status` already records it. Registration is the work of FIFA TMS and national associations, not FPDS.
+
+**Alternatives considered.** Keep one value. This forces the sender to hide an option.
+
+### D-18. The `submission` block is specified
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** `SPEC.md` specifies the `submission` block. `submission_id` is unique for each sender and has no meaning for the receiver. `submitted_at` is the reference date for the calculation of `is_minor`.
+
+**Reason.** The first draft required the block but did not specify it. §10 said to calculate minor status "against the date of submission" but did not name the field.
+
+**Alternatives considered.** None.
+
+### D-19. Consent and minors
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- A minor is a person under 18 years old on the date of `submission.submitted_at`. This agrees with Article 19 of the FIFA Regulations on the Status and Transfer of Players.
+- `consent_obtained` is removed.
+- If `lawful_basis` is `consent`, `consent_date` is required.
+- The `lawful_basis` values are `consent`, `contract`, `legitimate_interest`, `legal_obligation` and `not_stated`. They agree with the lawful bases in Article 6 of the GDPR. Producers in other jurisdictions use the nearest value.
+
+**Reason.** The first draft did not give an age, so implementations did not calculate minor status consistently. `consent_obtained` repeated `lawful_basis` and was able to contradict it. A claim of consent without a date is weak.
+
+**Alternatives considered.** Keep `consent_obtained`. Add a field for the person who gave consent. Consent from a parent or guardian is open question OQ-8.
+
+### D-20. Boolean names start with `is_` or `has_`
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** Each boolean field name starts with `is_` or `has_`. `consent.subject_is_minor` becomes `consent.is_minor`.
+
+**Reason.** A prefix shows the type in the name. `has_` permits natural names for possession, where `is_` alone gives unclear names.
+
+**Alternatives considered.** `is_` only. An enum `extension_option` with the values `none`, `club`, `player`, `mutual` and `unknown` was agreed to replace `option_to_extend`. D-11 then removed the field from the core, so `is_minor` is the only boolean in v0.1.0.
+
+### D-21. Sixteen position codes
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** Position codes are uppercase. The codes are:
+
+`GK`, `RB`, `LB`, `RWB`, `LWB`, `CB`, `LCB`, `RCB`, `CDM`, `CM`, `CAM`, `RM`, `LM`, `RW`, `LW`, `ST`
+
+`CB` is a centre-back who plays on the two sides. `LCB` and `RCB` are centre-backs who play on one side only. A centre-back who plays on the two sides is `CB`, not `LCB` with `RCB` as a secondary position.
+
+**Reason.** `CDM`, `CM` and `CAM` are more widely recognised than `DM`, `CM` and `AM`, and they keep the difference between a 6, an 8 and a 10. Clubs ask for left-sided centre-backs, so `LCB` and `RCB` have a recruitment use. Wide midfielders in a 4-4-2 have a different profile from wingers, so `RM` and `LM` stay. Uppercase agrees with scouting platforms and broadcast graphics.
+
+**Alternatives considered.** Side-specific codes for all central positions (`LCDM`, `RCDM`, `LCM`, `RCM`, `LCAM`, `RCAM`). These are slots in a formation, not player types. The same player gets a different code in a different formation. `SS` (second striker) is removed, because its meaning is contested. Other side-specific positions are open question OQ-10.
+
+### D-22. Contract status and current club
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- `contract.status` has the values `under_contract`, `free_agent`, `on_loan`, `youth_scholarship` and `unknown`. `free_agent` means "not under contract with any club". The value `unattached` is removed.
+- `player.current_club` is required when `status` is `under_contract`, `on_loan` or `youth_scholarship`. It MUST NOT be present when `status` is `free_agent`. It is optional when `status` is `unknown`.
+- When `status` is `on_loan`, `current_club` is the club where the player plays on loan. `parent_club` is the club that holds the registration of the player.
+
+**Reason.** The first draft required `current_club` for all players. An example worked around this with a club named "Unattached", which is the free text that FPDS exists to remove. The first draft did not define `free_agent` or `unattached`. Two undefined values give inconsistent data. Under D-9, v0.1.0 ships one value. If consultation shows that a second value is necessary, its addition is a minor version.
+
+**Alternatives considered.** Keep `unattached` with a definition. Make `current_club` optional for free agents, so that it can hold the previous club. The split of `free_agent` is open question OQ-9.
+
+### D-23. Provenance rules
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- Each provenance key MUST resolve to a value in the same document.
+- An entry applies to the value at its pointer and to all values below it. The most specific entry has priority.
+- `asserted_by` is free text for display. It does not identify a party.
+
+**Reason.** Without these rules, a consumer can show sourcing for a claim that does not exist. Producers can mark a full object with one entry. A structured `asserted_by` needs an issuer or a registry, which `GOVERNANCE.md` commitment 2 does not permit. A structured format is open question OQ-11.
+
+**Alternatives considered.** A format such as `agent:<licence>` or `club:<fifa_connect_id>`.
+
+### D-24. Extension keys use a reverse-DNS prefix
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- Each key in `extensions` MUST start with a reverse domain name, then a slash, then a field name. An example is `com.example/scouting_grade`. The schema enforces this with `propertyNames`.
+- The `football.fpds` prefix is reserved. No key uses it in v0.1.0. Examples in the specification use `com.example`.
+- `extensions` MUST NOT contain diagnoses, injury details or medical history. An availability status is permitted.
+
+**Reason.** Without a prefix, two producers can use the same key with different meanings. A domain name shows who defined a key, and FPDS needs no registry to issue names. If the specification defines keys under its own prefix, those keys become a second core without consultation. The first draft stated the medical restriction only in internal notes, and `medical` is not in the core, so the restriction must be in the specification.
+
+**Alternatives considered.** Prefixes as a recommendation only. Producers then omit them.
+
+---
+
+## Consultation
+
+### D-25. Consultation has two layers
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- **Participation.** Each open consultation has a page at `fpds.football/consult/`. The page is in Simple English and contains no JSON. It has a Tally form that asks for the role of the respondent, the answer, an optional comment and an optional email address. The form has a privacy notice. LinkedIn posts link to these pages.
+- **Record.** GitHub holds the specification, `CHANGELOG.md`, this file, and one Discussion for each open question.
+- **Summary.** When a consultation closes, the maintainer publishes a summary on the page and in the Discussion. The summary is anonymous by default. It shows the number of responses for each role, the main arguments and the decision with its reasons.
+
+**Reason.** Agents and club staff do not use GitHub. If GitHub is the only way to take part, developers and data vendors give most of the input. A published summary with counts by role shows whose input formed each decision.
+
+**Alternatives considered.** GitHub Discussions only. A self-hosted form on Cloudflare, which means storing personal data in FPDS infrastructure.
+
+### D-26. Three consultations at launch
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** Three consultations open at launch:
+
+1. Release clauses and sell-on percentages
+2. Medical availability
+3. Wages and salary (OQ-2)
+
+After launch, a new consultation opens every two to three weeks. Each stays open for at least 14 days. §14 lists all open questions. Questions without an open consultation say "consultation not yet open". Technical questions, such as the format of `asserted_by` and signed submissions, use GitHub Discussions only. The "Two questions the draft needs answered" section of `index.html` becomes "Open consultations".
+
+**Reason.** Twenty questions at one time give low response rates and too little evidence for each decision. These three topics interest agents and clubs most, and the wage question has the largest effect on adoption.
+
+**Alternatives considered.** Open all consultations at launch.
