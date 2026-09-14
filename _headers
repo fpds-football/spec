@@ -1,4 +1,4 @@
-# Cloudflare Pages response headers. See SPEC.md and DECISIONS.md D-5.
+# Cloudflare Workers static asset response headers. See DECISIONS.md D-5 and D-30.
 
 /*
   X-Content-Type-Options: nosniff

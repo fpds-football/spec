@@ -10,3 +10,4 @@ venv/
 *.swp
 /dist/
 /_site/
+.wrangler/

@@ -65,7 +65,7 @@ Each entry has an ID, a date, a status, the decision, the reason, and the altern
 ### D-5. Host the site on Cloudflare Pages
 
 - **Date:** 2026-09-14
-- **Status:** Pre-release, maintainer decision
+- **Status:** Superseded by D-30
 
 **Decision.** The site deploys through the Cloudflare Pages Git integration from `main`. A build step copies only `index.html`, `schema/`, `consult/` and a `_headers` file into `_site/`. Schema files have the content type `application/schema+json` and the header `Access-Control-Allow-Origin: *`. Before the tag, the cache time is short. The GitHub Pages workflow, `CNAME` and `.nojekyll` are removed.
 
@@ -439,3 +439,19 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 **Reason.** The first draft gave `agent_stated` as the source for all values without an entry. After D-28, that source is incorrect for a submission that the player sends.
 
 **Alternatives considered.** Keep `agent_stated` as the only default. It then states that an agent made a claim when no agent took part.
+
+### D-30. Host the site on Cloudflare Workers static assets
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** This entry replaces D-5.
+
+- The site deploys through Cloudflare Workers Builds from the `fpds-football/spec` repository.
+- The build command is `sh scripts/build-site.sh`. The deploy command is `npx wrangler deploy`.
+- `wrangler.jsonc` in the repository contains the project name, the compatibility date and the assets directory `_site`.
+- The build step, the published paths and the `_headers` rules from D-5 do not change.
+
+**Reason.** Cloudflare now calls the Pages workflow "legacy", and Workers is the default for new projects. Workers static assets serve `_headers` in the same way as Pages. A configuration file in the repository keeps the deployment settings under version control, not only in the dashboard.
+
+**Alternatives considered.** Continue with the legacy Pages workflow. It works now, but it is not the direction of the platform. Put the settings as flags in the deploy command. The settings then exist only in the dashboard.

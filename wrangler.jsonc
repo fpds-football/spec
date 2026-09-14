@@ -1,0 +1,11 @@
+// Cloudflare Workers configuration for https://fpds.football. See DECISIONS.md D-30.
+// Build command: sh scripts/build-site.sh
+// Deploy command: npx wrangler deploy
+{
+  "name": "spec",
+  "compatibility_date": "2026-09-14",
+  "assets": {
+    // The build script puts only index.html, _headers, schema/ and consult/ in this directory.
+    "directory": "./_site"
+  }
+}

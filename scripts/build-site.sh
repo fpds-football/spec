@@ -1,6 +1,6 @@
 #!/bin/sh
-# Build the public site for Cloudflare Pages.
-# Cloudflare Pages settings: build command "sh scripts/build-site.sh", output directory "_site".
+# Build the public site for Cloudflare Workers static assets.
+# Cloudflare Workers Builds: build command "sh scripts/build-site.sh", deploy command "npx wrangler deploy".
 # The site contains only these paths. Do not publish the repository root.
 set -eu
 

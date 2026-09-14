@@ -96,7 +96,7 @@ Three consultations open at launch: wages (OQ-2), release clauses and sell-on pe
 ## Hosting and infrastructure
 
 - **The GitHub organisation is `fpds-football`.** Do not use `fpds`.
-- **The site uses Cloudflare Pages, and the domain is registered at Cloudflare.** Do not assume GitHub Pages.
+- **The site uses Cloudflare Workers static assets, and the domain is registered at Cloudflare.** `wrangler.jsonc` contains the configuration. Do not assume GitHub Pages or Cloudflare Pages.
 - **The site publishes only `index.html`, `schema/`, `consult/` and `_headers`.** Do not publish the repository root.
 - **Consultation forms use Tally.** GitHub is the record, and the website is where non-technical people take part.
 

@@ -115,15 +115,18 @@ This section is for the maintainer.
 
 ### Hosting
 
-The site at `https://fpds.football` uses Cloudflare Pages.
+The site at `https://fpds.football` uses Cloudflare Workers static assets. `wrangler.jsonc` contains the configuration.
 
-1. In Cloudflare, create a Pages project from the `fpds-football/spec` repository.
-2. Set the production branch to `main`.
-3. Set the build command to `sh scripts/build-site.sh`, and the output directory to `_site`. Leave the framework preset empty.
-4. Add `fpds.football` as a custom domain for the project.
-5. Make sure that `https://fpds.football/schema/v0.1/player.json` returns the schema with the content type `application/schema+json`.
+1. In Cloudflare, go to **Workers & Pages** and create an application.
+2. Select **Continue with GitHub**, then select the `fpds-football/spec` repository.
+3. Set the project name to `spec`. This name must agree with `name` in `wrangler.jsonc`.
+4. Set the build command to `sh scripts/build-site.sh`.
+5. Set the deploy command to `npx wrangler deploy`.
+6. Keep builds for non-production branches on. Pull requests then get a preview URL.
+7. After the first deployment, go to **Settings**, then **Domains & Routes**. Add `fpds.football` as a custom domain.
+8. Make sure that `https://fpds.football/schema/v0.1/player.json` returns the schema with the content type `application/schema+json`.
 
-The site publishes only `index.html`, `schema/`, `consult/` and `_headers`. Do not publish the repository root.
+The site publishes only `index.html`, `schema/`, `consult/` and `_headers`. Do not publish the repository root. If you change the project name, change `name` in `wrangler.jsonc` too.
 
 ### Email
 

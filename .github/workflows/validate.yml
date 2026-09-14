@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build the site that Cloudflare Pages publishes
+      - name: Build the site that Cloudflare publishes
         run: sh scripts/build-site.sh
 
       - name: The site contains only the permitted paths
