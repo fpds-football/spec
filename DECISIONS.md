@@ -619,3 +619,14 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 **Reason.** The first implementation, `fpds-ts`, found these gaps. Without a stated time zone and a stated leap-day rule, two implementations can calculate a different minor status for the same document. 1 March keeps the player a minor for longer, which is the safer choice for safeguarding. §13.1 said that implementations MUST enforce the medical rule, but software cannot decide with certainty whether text contains medical information. A MUST that nobody can enforce is not a real requirement.
 
 **Alternatives considered.** 28 February for a birthday on 29 February. It ends the protection of a minor one day earlier. The date of `submitted_at` in UTC. It gives a different date from the date that the producer wrote. Keep the medical rule in §13.1 with a keyword check. A keyword check gives false results in the two directions.
+
+### D-40. The builder keeps its draft by JSON Pointer, not in TanStack Form
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** The builder keeps the draft as a plain object and changes it by JSON Pointer. It does not use TanStack Form. This entry changes one part of D-33.
+
+**Reason.** `@fpds-football/fpds` gives field states, issues and provenance keys as JSON Pointers. TanStack Form uses paths such as `performance[0].minutes`. With TanStack Form, the builder must convert between the two kinds of path everywhere, and provenance keys contain `/` characters. A store by JSON Pointer uses one kind of key from the library to the screen. The builder also does not use the validation of a form library, because all rules come from `@fpds-football/fpds`.
+
+**Alternatives considered.** TanStack Form, as D-33 planned.
