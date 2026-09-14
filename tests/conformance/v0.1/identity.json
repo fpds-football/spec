@@ -1,0 +1,75 @@
+{
+  "description": "Identity and external identifiers (SPEC section 4)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "a two-letter country code is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/nationalities",
+          "value": [
+            "PL"
+          ]
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an empty nationalities array is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/nationalities",
+          "value": []
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a date of birth in day-first format is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/date_of_birth",
+          "value": "17/04/2003"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an unrecognised external identifier key is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/player/external_ids/sofascore_id",
+          "value": "88213"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an implausible height is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/height_cm",
+          "value": 18
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an empty name is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/player/full_name",
+          "value": ""
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

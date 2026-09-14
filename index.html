@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPDS — Football Player Data Standard</title>
+<meta name="description" content="An open format for sharing player information between agents, intermediaries and clubs. Draft v0.1.0.">
+<link rel="canonical" href="https://fpds.football/">
+<style>
+  :root {
+    --paper: #f6f7f9;
+    --ink: #10141a;
+    --ink-soft: #545c68;
+    --rule: #d6dbe2;
+    --verified: #14577f;
+    --stated: #85631a;
+    --field: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .prose { max-width: 38rem; }
+
+  a { color: var(--verified); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible {
+    outline: 2px solid var(--verified);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  code, .mono {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 0.86em;
+  }
+
+  /* Masthead */
+
+  header.masthead {
+    border-bottom: 1px solid var(--rule);
+    padding: 2.5rem 0 1.75rem;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 620;
+    letter-spacing: -0.015em;
+  }
+
+  .wordmark .full {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+  }
+
+  .status {
+    margin: 0.6rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.94rem;
+  }
+
+  /* Argument */
+
+  h1 {
+    margin: 3rem 0 1.25rem;
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.6rem);
+    line-height: 1.15;
+    font-weight: 640;
+    letter-spacing: -0.025em;
+    max-width: 20ch;
+  }
+
+  .lede { font-size: 1.05rem; margin: 0 0 2.5rem; }
+
+  /* The submission render — the one loud element */
+
+  .submission {
+    background: var(--field);
+    border: 1px solid var(--rule);
+    padding: 1.5rem 1.5rem 1.25rem;
+    margin: 0 0 0.9rem;
+  }
+
+  .submission-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .player-name { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+  .player-meta { color: var(--ink-soft); font-size: 0.9rem; }
+
+  dl.fields {
+    display: grid;
+    grid-template-columns: minmax(7rem, 11rem) 1fr;
+    gap: 0.1rem 1.25rem;
+    margin: 1rem 0 0;
+  }
+
+  dl.fields dt {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    padding: 0.42rem 0;
+  }
+
+  dl.fields dd {
+    margin: 0;
+    padding: 0.42rem 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .mark {
+    font-size: 0.74rem;
+    letter-spacing: 0.01em;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+  }
+
+  .v { color: var(--verified); }
+  .v .value { font-weight: 560; }
+  .s { color: var(--stated); }
+  .s .value { font-style: italic; }
+  .fields dd .value { color: var(--ink); }
+  .s .value { color: var(--stated); }
+
+  .caption {
+    color: var(--ink-soft);
+    font-size: 0.93rem;
+    margin: 0 0 3rem;
+    max-width: 44rem;
+  }
+
+  /* Doors */
+
+  .doors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    border-top: 1px solid var(--rule);
+    margin: 0 0 3rem;
+  }
+
+  .door {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.1rem 0;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding-right: 1.5rem;
+  }
+
+  .door .title { font-weight: 580; color: var(--verified); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .door .note { display: block; color: var(--ink-soft); font-size: 0.9rem; margin-top: 0.15rem; }
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 620;
+    letter-spacing: -0.01em;
+    margin: 2.5rem 0 0.75rem;
+  }
+
+  p { margin: 0 0 1rem; }
+
+  ul { padding-left: 1.1rem; margin: 0 0 1rem; }
+  li { margin-bottom: 0.4rem; }
+
+  pre {
+    background: var(--field);
+    border: 1px solid var(--rule);
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    margin: 0 0 1rem;
+    line-height: 1.5;
+  }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 3.5rem;
+    padding: 1.75rem 0 3rem;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  footer p { margin: 0 0 0.5rem; }
+
+  @media (max-width: 34rem) {
+    dl.fields { grid-template-columns: 1fr; gap: 0; }
+    dl.fields dt { padding-bottom: 0; font-size: 0.84rem; }
+    dl.fields dd { padding-top: 0.1rem; padding-bottom: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="wordmark">FPDS <span class="full">Football Player Data Standard</span></p>
+    <p class="status">Draft v0.1.0. Nothing here is stable, and breaking changes are expected before 1.0.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <h1>A player submission should say who claimed what.</h1>
+
+  <p class="lede prose">
+    Players are pitched between agents, intermediaries and clubs as free text with no
+    agreed structure and no sourcing. FPDS is an open JSON format for that document —
+    around twenty fields, and a rule that every figure carries its denominator and every
+    claim carries its source.
+  </p>
+
+  <section class="submission" aria-label="Example submission showing verified and agent-stated claims">
+    <div class="submission-head">
+      <span class="player-name">Tomasz Wojcik</span>
+      <span class="player-meta">CM · 17 April 2003 · Widzew Łódź</span>
+    </div>
+    <dl class="fields">
+      <dt>Contract expires</dt>
+      <dd class="v"><span class="value">30 June 2027</span> <span class="mark">verified · FIFA TMS</span></dd>
+
+      <dt>Minutes, 2025/26</dt>
+      <dd class="v"><span class="value">2,418</span> <span class="mark">verified · Wyscout</span></dd>
+
+      <dt>Goals, 2025/26</dt>
+      <dd class="v"><span class="value">10</span> <span class="mark">verified · Wyscout</span></dd>
+
+      <dt>Release clause</dt>
+      <dd class="s"><span class="value">€1,800,000</span> <span class="mark">stated by agent</span></dd>
+
+      <dt>GBE points</dt>
+      <dd class="s"><span class="value">15</span> <span class="mark">estimated</span></dd>
+
+      <dt>Mandate</dt>
+      <dd class="v"><span class="value">Exclusive, to 31 Jan 2027</span> <span class="mark">licence POL-2024-01188</span></dd>
+    </dl>
+  </section>
+
+  <p class="caption">
+    The same submission with its provenance rendered. Four of these six figures came from
+    somewhere checkable and two did not, and a recruitment analyst can see which in under a
+    second. An interface that shows a verified minutes total and an unverified release clause
+    in the same typeface has thrown away the point of the format.
+  </p>
+
+  <nav class="doors" aria-label="Main links">
+    <a class="door" href="https://github.com/fpds-football/spec/blob/main/SPEC.md">
+      <span class="title">Read the specification</span>
+      <span class="note">The normative document, fourteen sections</span>
+    </a>
+    <a class="door" href="/schema/v0.1/player.json">
+      <span class="title">Get the schema</span>
+      <span class="note">JSON Schema 2020-12, permanent URL</span>
+    </a>
+    <a class="door" href="https://github.com/fpds-football/spec/discussions">
+      <span class="title">Argue with the draft</span>
+      <span class="note">The field list is still contested</span>
+    </a>
+  </nav>
+
+  <div class="prose">
+
+    <h2>What FPDS is not</h2>
+    <ul>
+      <li><strong>Not a protocol.</strong> It defines the shape of a payload, not how two systems exchange it. A submission can travel by email, API, file drop or an attachment.</li>
+      <li><strong>Not a registry.</strong> It does not tell you whether a claim is true. It tells you who made it.</li>
+      <li><strong>Not a replacement for FIFA TMS.</strong> Where field names overlap, FPDS follows TMS.</li>
+    </ul>
+
+    <h2>Validate a submission</h2>
+    <pre><code>pip install check-jsonschema
+check-jsonschema \
+  --schemafile https://fpds.football/schema/v0.1/player.json \
+  submission.json</code></pre>
+
+    <h2>Two questions the draft needs answered</h2>
+    <p>
+      <strong>Clubs and recruitment staff:</strong> what would need to be in here before you
+      would ask agents to submit in this format?
+    </p>
+    <p>
+      <strong>Agents:</strong> what in this draft would stop you using it? The honest answer
+      is more useful than the polite one.
+    </p>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Schema and examples under Apache-2.0. Specification text under CC BY 4.0.
+      Schema URLs published here are permanent.
+    </p>
+    <p>
+      Maintained by one person, in public, with the conflicts of interest written down in
+      <a href="https://github.com/fpds-football/spec/blob/main/GOVERNANCE.md">GOVERNANCE.md</a>.
+      Source on <a href="https://github.com/fpds-football/spec">GitHub</a>.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

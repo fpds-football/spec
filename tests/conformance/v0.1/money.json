@@ -1,0 +1,72 @@
+{
+  "description": "Money as integer minor units (SPEC section 6)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "a fractional amount is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/release_clause/amount",
+          "value": 1800000.5
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an amount written as a string is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/release_clause/amount",
+          "value": "1800000"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a currency symbol in place of an ISO 4217 code is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/release_clause/currency",
+          "value": "EUR "
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a lowercase currency code is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/release_clause/currency",
+          "value": "eur"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an amount with no currency is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/contract/release_clause/currency"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "zero is a valid amount",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/release_clause/amount",
+          "value": 0
+        }
+      ],
+      "valid": true
+    }
+  ]
+}

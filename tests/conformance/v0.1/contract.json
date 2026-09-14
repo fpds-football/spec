@@ -1,0 +1,105 @@
+{
+  "description": "Contract status conditionals (SPEC section 6)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "the base document is valid",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "under_contract without an expiry date is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/contract/expiry_date"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "free_agent without an expiry date is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/status",
+          "value": "free_agent"
+        },
+        {
+          "op": "remove",
+          "path": "/contract/expiry_date"
+        },
+        {
+          "op": "remove",
+          "path": "/contract/option_to_extend"
+        },
+        {
+          "op": "remove",
+          "path": "/contract/release_clause"
+        },
+        {
+          "op": "remove",
+          "path": "/provenance/~1contract~1release_clause"
+        },
+        {
+          "op": "remove",
+          "path": "/provenance/~1contract~1expiry_date"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "on_loan without a parent club is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/status",
+          "value": "on_loan"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "on_loan with expiry and parent club is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/status",
+          "value": "on_loan"
+        },
+        {
+          "op": "add",
+          "path": "/contract/parent_club",
+          "value": {
+            "name": "Legia Warszawa",
+            "country": "POL"
+          }
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "sell-on above 100 per cent is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/sell_on_percentage",
+          "value": 140
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an unrecognised contract status is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/contract/status",
+          "value": "out_of_contract"
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

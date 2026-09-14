@@ -1,0 +1,63 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  schema:
+    name: schema and examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tests/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r tests/requirements.txt
+
+      - name: Check the schema is itself a valid JSON Schema
+        run: check-jsonschema --check-metaschema schema/v0.1/player.json
+
+      - name: Validate every worked example
+        run: check-jsonschema --schemafile schema/v0.1/player.json examples/valid/*.json
+
+      - name: Run the conformance suite
+        run: python3 tests/run_conformance.py
+
+  hygiene:
+    name: json formatting and links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Every JSON file parses and is formatted with two-space indent
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            if ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f"; then
+              echo "::error file=$f::does not parse"; fail=1; continue
+            fi
+            if ! diff -q <(python3 -c "import json,sys; print(json.dumps(json.load(open(sys.argv[1])), indent=2, ensure_ascii=False))" "$f") <(sed -e '$a\' "$f") >/dev/null; then
+              echo "::warning file=$f::not canonically formatted (2-space indent, no trailing whitespace)"
+            fi
+          done < <(git ls-files '*.json')
+          exit $fail
+
+      - name: The schema $id matches its path
+        run: |
+          expected="https://fpds.football/schema/v0.1/player.json"
+          actual=$(python3 -c "import json; print(json.load(open('schema/v0.1/player.json'))['\$id'])")
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::\$id is $actual, expected $expected"
+            exit 1
+          fi

@@ -1,0 +1,66 @@
+{
+  "description": "Position vocabulary (SPEC section 5)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "free text in place of a position code is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/positions/primary_position",
+          "value": "centre mid"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a lowercase position code is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/positions/primary_position",
+          "value": "cm"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a missing primary position is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/positions/primary_position"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "secondary positions are optional",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/positions/secondary_positions"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "more than four secondary positions is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/positions/secondary_positions",
+          "value": [
+            "DM",
+            "AM",
+            "RM",
+            "LM",
+            "RW"
+          ]
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

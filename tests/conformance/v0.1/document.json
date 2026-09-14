@@ -1,0 +1,89 @@
+{
+  "description": "Document envelope, consent and extensions (SPEC sections 3, 10, 12)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/free-agent-minimal.json",
+  "tests": [
+    {
+      "description": "the minimal document is valid",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "a missing consent block is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/consent"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "consent without a minor flag is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/consent/subject_is_minor"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a version from a future major line is rejected by the 0.1 schema",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/fpds_version",
+          "value": "0.2.0"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a patch-level version within 0.1 is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/fpds_version",
+          "value": "0.1.3"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "an unrecognised top-level member is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/scouting_grade",
+          "value": "B+"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the same value inside a namespaced extension is accepted",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/extensions",
+          "value": {
+            "com.exampleclub/scouting_grade": "B+"
+          }
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a submission purpose outside the vocabulary is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/purpose",
+          "value": "enquiry"
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

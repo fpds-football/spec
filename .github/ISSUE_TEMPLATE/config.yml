@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Propose a field, or argue against one
+    url: https://github.com/fpds-football/spec/discussions/categories/field-proposals
+    about: The field list is still contested. Proposals and objections belong in a discussion, not an issue.
+  - name: Ask how something should work
+    url: https://github.com/fpds-football/spec/discussions/categories/q-a
+    about: Questions about using FPDS, or about a case the spec does not obviously cover.
+  - name: Report a security or privacy defect
+    url: https://github.com/fpds-football/spec/security/advisories/new
+    about: Privately report a schema defect with security or data-protection impact.

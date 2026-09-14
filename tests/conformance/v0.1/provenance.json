@@ -1,0 +1,70 @@
+{
+  "description": "Claim-level provenance (SPEC section 11)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "a verified claim with nothing to verify against is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/~1contract~1expiry_date",
+          "value": {
+            "source": "verified",
+            "asserted_by": "Widzew Lodz"
+          }
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an agent_stated claim needs no verification target",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/~1contract~1expiry_date",
+          "value": {
+            "source": "agent_stated"
+          }
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a provenance key that is not a JSON Pointer is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/provenance/contract.expiry_date",
+          "value": {
+            "source": "agent_stated"
+          }
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an unrecognised source value is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/~1eligibility~1gbe_points",
+          "value": {
+            "source": "probably_true"
+          }
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an omitted provenance block is valid, and every claim defaults to agent_stated",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/provenance"
+        }
+      ],
+      "valid": true
+    }
+  ]
+}

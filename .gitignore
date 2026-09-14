@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.vscode/
+*.swp
+/dist/
+/_site/

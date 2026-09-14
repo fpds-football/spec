@@ -1,0 +1,90 @@
+{
+  "description": "Performance records and the minutes denominator (SPEC section 8)",
+  "schema": "schema/v0.1/player.json",
+  "base": "examples/valid/midfielder-under-contract.json",
+  "tests": [
+    {
+      "description": "goals without minutes is rejected",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/performance/0/minutes"
+        },
+        {
+          "op": "remove",
+          "path": "/provenance/~1performance~10~1minutes"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a season with no output figures is still valid",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/performance/0/goals"
+        },
+        {
+          "op": "remove",
+          "path": "/performance/0/assists"
+        },
+        {
+          "op": "remove",
+          "path": "/provenance/~1performance~10~1goals"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "an omitted performance block is valid",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/performance"
+        },
+        {
+          "op": "remove",
+          "path": "/provenance/~1performance~10~1minutes"
+        },
+        {
+          "op": "remove",
+          "path": "/provenance/~1performance~10~1goals"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a malformed season string is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/performance/0/season",
+          "value": "2025-2026"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a stored per-90 figure is rejected",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/performance/0/goals_per_90",
+          "value": 0.37
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "negative minutes are rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/performance/0/minutes",
+          "value": -90
+        }
+      ],
+      "valid": false
+    }
+  ]
+}
