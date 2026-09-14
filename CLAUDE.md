@@ -48,6 +48,7 @@ Obey these rules for every change. If a change breaks one, tell the user. Do not
 Do not argue against these unless the user asks. `DECISIONS.md` gives the reasons.
 
 - **The core is the basic set in D-11 and D-28.** Fields from the first draft that are not in the core are open questions in §14.
+- **`submission_id` is a lowercase UUID, one for each version of a document** (D-31). A change to any value gives a new ID and a new `submitted_at`. Forwarding does not.
 - **`submission.sender` is `intermediary` or `player`.** `representation` is required for an intermediary. A minor cannot be the sender.
 - **Five contract statuses with FIFA definitions:** `under_contract`, `on_loan`, `amateur`, `free_agent`, `unknown`. §7.2 of `SPEC.md` states which fields each status permits.
 - **Sixteen uppercase position codes.** They separate `CDM`, `CM` and `CAM`, and include `LCB` and `RCB`. "Centre mid" is not valid.
@@ -99,6 +100,8 @@ Three consultations open at launch: wages (OQ-2), release clauses and sell-on pe
 - **The site uses Cloudflare Workers static assets, and the domain is registered at Cloudflare.** `wrangler.jsonc` contains the configuration. Do not assume GitHub Pages or Cloudflare Pages.
 - **The site publishes only `index.html`, `schema/`, `consult/` and `_headers`.** Do not publish the repository root.
 - **Consultation forms use Tally.** GitHub is the record, and the website is where non-technical people take part.
+- **Three repositories** (D-32). This repository holds the schema, the specification and the conformance suite. `fpds-football/fpds-ts` is the TypeScript validation library. `fpds-football/site` holds the website, the builder and the viewer.
+- **The builder and the viewer run only in the browser** (D-33 to D-37). Player data never goes to a server. Do not add a feature that sends player data over the network.
 
 ## Context
 

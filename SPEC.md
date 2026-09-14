@@ -47,13 +47,15 @@ These rules apply to the full document:
 - A date MUST use the format `YYYY-MM-DD` (ISO 8601). A timestamp MUST use the RFC 3339 format with a time zone, for example `2026-09-13T09:41:00Z`.
 - Producers MUST NOT put a local date format, such as `07/03/1998`, in a date field. Consumers SHOULD show dates in the local format of the reader.
 - A country code MUST be an ISO 3166-1 alpha-3 code in uppercase, for example `POL`.
+- A document MUST be JSON encoded in UTF-8. Its media type is `application/json`.
+- When a document is stored or sent as a file, the file name SHOULD end with `.fpds.json`, for example `joao-costa-2026-09-14.fpds.json`. People and software can then recognise the file as an FPDS document.
 
 ## 4. Submission
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
-| `submission_id` | string | yes | Unique for each sender. The receiver MUST NOT give it a meaning. |
-| `submitted_at` | timestamp | yes | The time that the sender made the submission. |
+| `submission_id` | UUID | yes | Identifies this version of the document. See §4.3. |
+| `submitted_at` | timestamp | yes | The time that the producer made this version of the document. See §4.3. |
 | `purposes` | array of enum | yes | One or more of `permanent_transfer`, `loan`, `trial`, `information_only`. |
 | `sender` | enum | yes | `intermediary` or `player`. |
 
@@ -76,6 +78,19 @@ If `sender` is `player`, the document MAY contain `representation`. A player who
 
 If `consent.is_minor` is `true`, `sender` MUST NOT be `player`. §10 gives the reason.
 
+### 4.3 Submission ID and versions
+
+A receiver uses `submission_id` to recognise the same document when it arrives more than once. This includes a copy that another party forwards. `submission_id` does not identify the player, and it does not prove who sent the document.
+
+- `submission_id` MUST be a UUID as defined in RFC 9562, in lowercase, with hyphens. For example: `b7f3c2e1-4a9d-4f11-9c3e-2a1d5f8b0c44`.
+- A producer SHOULD use UUID version 4 (random) or version 7 (time-ordered).
+- Each version of a document has its own `submission_id`. If any value in the document changes, the producer MUST make a new `submission_id` and a new `submitted_at`.
+- If a party sends or forwards a document without changes, `submission_id` and `submitted_at` MUST NOT change.
+- `submitted_at` is the time that the producer made this version. It is not the time that a party sent the document.
+- The receiver MUST NOT give `submission_id` any other meaning.
+
+FPDS 0.1 does not link a new version to the version that it replaces. This is open question OQ-24.
+
 ## 5. Identity
 
 | Field | Type | Required | Notes |
@@ -97,7 +112,7 @@ There is no universal player identifier in practice. A consumer that matches a s
 | Field | Type | Required |
 |---|---|---|
 | `primary_position` | position code | yes |
-| `secondary_positions` | array of position codes | no. Maximum four, and each code occurs only once. |
+| `secondary_positions` | array of position codes | no. Maximum four. Each code occurs only once, and the array MUST NOT contain the primary position. |
 
 A position code MUST be one of these values. Codes are uppercase.
 
@@ -256,7 +271,7 @@ FIFA regulations on the protection of minors and national safeguarding rules app
 - `asserted_by` is free text for display. It does not identify a party.
 - Provenance records who made a claim. It is not authentication, and it does not prove that the named party sent the document.
 
-A sender who types a submission by hand does not need to write provenance. The document is still correct about what it is.
+A producer does not need to write provenance. A document without provenance is still correct about what it is: every value comes from the sender.
 
 Consumers SHOULD show the source of each value. If a consumer shows a verified value and an unverified value in the same way, provenance has no purpose.
 
@@ -285,7 +300,18 @@ A field that many independent producers use is a candidate for the core. §14 an
 
 ## 13. Conformance
 
-A **conforming producer** makes documents that are valid against the published schema for the version in `fpds_version`, and that obey the rules in §13.1.
+A **producer** is software that makes FPDS documents. Examples are agency software, a scouting platform, a club system, and a form that makes a file. People do not usually write FPDS documents by hand.
+
+A **conforming producer** makes documents that are valid against the published schema for the version in `fpds_version`, and that obey the rules in §13.1. For each document, a conforming producer does these steps:
+
+1. Set `fpds_version` to the version of FPDS that it uses.
+2. Make a new `submission_id` and set `submitted_at` to the current time (§4.3).
+3. Calculate `consent.is_minor` from `player.date_of_birth` and `submitted_at` (§10.1).
+4. Remove each field that does not apply, for example `expiry_date` for a `free_agent` (§7.2).
+5. Validate the document against the schema and the rules in §13.1.
+6. Write the document as UTF-8 JSON (§3).
+
+If a producer changes a document that it received or made before, it does all the steps again. Step 2 then gives the changed document a new `submission_id`.
 
 A **conforming consumer** accepts all valid documents for the versions that it supports. It ignores extension keys that it does not recognise. It does not reject a document only because the document contains optional fields that the consumer does not use.
 
@@ -299,6 +325,7 @@ JSON Schema cannot express these rules. A conforming implementation MUST enforce
 2. In a `YYYY/YY` season, the second part is the year after the first part (§9.1).
 3. Each key in `provenance` resolves to a value in the same document (§11.1).
 4. `extensions` contains no diagnoses, injury details or medical history (§12).
+5. `positions.secondary_positions` does not contain the value of `positions.primary_position` (§6).
 
 ## 14. Open questions
 
@@ -331,3 +358,5 @@ Agents, clubs and other parties answer questions through the consultation pages 
 | OQ-21 | Which identifiers other than FIFA Connect belong in the core? | `fifa_connect_id` only | GitHub Discussion |
 | OQ-22 | Which performance figures other than goals, assists and clean sheets belong in the core (for example starts, goals conceded, saves)? | Goals, assists, clean sheets | Not yet open |
 | OQ-23 | Does a submission include a physical profile, such as preferred foot and height? | No physical profile | Not yet open |
+| OQ-24 | Does a new version of a submission link to the version that it replaces? | No link between versions | GitHub Discussion |
+| OQ-25 | Does FPDS define a way to share a submission as a link, not as a file? | Files only | GitHub Discussion |

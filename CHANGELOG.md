@@ -20,6 +20,8 @@ The first public draft, version 0.1.0. It is not stable. Breaking changes are ex
 
 - A player submission document with ten top-level members. Six members are required, and `representation` is required when the sender is an intermediary.
 - A `submission` block with `submission_id`, `submitted_at`, `purposes` and `sender`.
+- `submission_id`, a lowercase UUID. Each version of a document has its own ID, so a receiver can recognise a repeated or forwarded copy.
+- A checklist in §13 for conforming producers, and a recommended file name ending `.fpds.json`.
 - `purposes`, an array that states one or more types of deal. `information_only` cannot occur with another value.
 - `sender`, with the values `intermediary` and `player`. A player can send their own profile. A minor cannot.
 - Sixteen position codes that separate `CDM`, `CM` and `CAM`, with `LCB` and `RCB` for centre-backs who play on one side.
@@ -30,11 +32,11 @@ The first public draft, version 0.1.0. It is not stable. Breaking changes are ex
 - Provenance for each claim, with keys that are JSON Pointers. The source `verified` requires `verified_against`. A value without an entry has the sender as its source.
 - An `extensions` object with keys that have a reverse-DNS prefix. The `football.fpds` prefix is reserved.
 - A pattern on each date and timestamp field, so that validators reject local date formats.
-- A list in §13.1 of the rules that implementations enforce because the schema cannot.
+- A list in §13.1 of the rules that implementations enforce because the schema cannot. One rule states that secondary positions do not repeat the primary position.
 - A conformance suite in `tests/conformance/`.
 
 ### Known open questions
 
-§14 of `SPEC.md` lists 23 open questions. Three consultations are open at launch: wages (OQ-2), release clauses and sell-on percentages (OQ-14), and medical availability (OQ-15).
+§14 of `SPEC.md` lists 25 open questions. Three consultations are open at launch: wages (OQ-2), release clauses and sell-on percentages (OQ-14), and medical availability (OQ-15).
 
 [Unreleased]: https://github.com/fpds-football/spec/commits/main

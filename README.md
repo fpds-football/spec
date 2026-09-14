@@ -66,6 +66,16 @@ A submission can give a source for each value. Each key is a JSON Pointer to the
 
 If a value has no entry, its source is the sender. That is `agent_stated` for an intermediary and `player_stated` for a player. Consumers show the source of each value. If an interface shows a verified minutes total and an unverified claim in the same way, the format has no purpose.
 
+## How do I create an FPDS-conforming document?
+
+You do not write FPDS by hand. Software makes the document for you.
+
+- **Agents and players.** A free builder on [fpds.football](https://fpds.football) is in development. You fill in a form, and the builder makes a file that ends with `.fpds.json`. You send the file by email or message, as you send a PDF now. Your data stays in your browser.
+- **Clubs.** A free viewer on [fpds.football](https://fpds.football) is in development. You open the file, and the viewer shows the player, the source of each value, and any problems with the file.
+- **Software providers.** Implement the schema now. §13 of [`SPEC.md`](SPEC.md) gives the steps for a conforming producer. Run the cases in [`tests/conformance/`](tests/conformance/) against your implementation. [`fpds-ts`](https://github.com/fpds-football/fpds-ts) is a TypeScript library that validates documents.
+
+A valid document has the correct structure. It does not prove that the information is true. The provenance of each value shows who made the claim.
+
 ## Take part
 
 FPDS grows through public consultation with the football industry.

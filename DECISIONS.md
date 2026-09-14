@@ -455,3 +455,148 @@ After launch, a new consultation opens every two to three weeks. Each stays open
 **Reason.** Cloudflare now calls the Pages workflow "legacy", and Workers is the default for new projects. Workers static assets serve `_headers` in the same way as Pages. A configuration file in the repository keeps the deployment settings under version control, not only in the dashboard.
 
 **Alternatives considered.** Continue with the legacy Pages workflow. It works now, but it is not the direction of the platform. Put the settings as flags in the deploy command. The settings then exist only in the dashboard.
+
+---
+
+## Tools for creating and reading submissions
+
+### D-31. Rules for `submission_id`
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- `submission_id` MUST be a lowercase RFC 9562 UUID with hyphens. Version 4 or version 7 is recommended. The schema enforces the format.
+- Each version of a document has its own `submission_id`. If any value changes, the producer makes a new ID and a new `submitted_at`.
+- A document that a party sends or forwards without changes keeps its ID.
+- `submitted_at` is the time that the producer made the version, not the time that a party sent it.
+- §4.3 of `SPEC.md` states the purpose: a receiver uses the ID to recognise a repeated or forwarded copy.
+- A link from a new version to the version that it replaces is open question OQ-24.
+
+**Reason.** The first text said "unique for each sender", but FPDS has no reliable way to identify a sender. A UUID is unique without a registry, and any software can make one offline. Recognition of forwarded copies helps clubs with submissions from parties that have no mandate (§8).
+
+**Alternatives considered.** Remove `submission_id` from v0.1.0. Documents made before a later addition then have no ID. Keep a free string. Receivers then cannot rely on uniqueness.
+
+### D-32. Three repositories
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- `fpds-football/spec` holds the schema, the specification and the conformance suite. It publishes only `https://fpds.football/schema/*`.
+- `fpds-football/fpds-ts` is a TypeScript validation library, published to npm. Its CI runs the full conformance suite from this repository and makes sure that its copy of the schema is identical.
+- `fpds-football/site` holds the homepage, the consultations, the builder and the viewer. It publishes all other paths on `fpds.football`.
+- `index.html` and `consult/` move from this repository to `fpds-football/site`.
+
+**Reason.** A specification repository that contains an application in one language becomes a project about that language. `fpds-ts` must be an independent implementation that anyone can use, not a part of the website. If the site deployment fails, the permanent schema URL still works.
+
+**Alternatives considered.** One new repository with the library and the application together. The library then looks like a part of the website.
+
+### D-33. Technology for the site and the library
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- The site uses TanStack Start. Content pages are prerendered to static HTML. The builder and the viewer run only in the browser.
+- The site uses TanStack Form and Tailwind CSS.
+- `fpds-ts` uses Ajv for JSON Schema 2020-12, compiled at build time. It returns error codes with messages in plain English.
+- Tests use Vitest and Playwright. The package manager is pnpm.
+- Pages of the builder and the viewer send no player data over the network. A test enforces this.
+
+**Reason.** Prerendered content pages give correct link previews on LinkedIn and in messages. Ajv compiled at build time needs no runtime code generation, so the site keeps a strict Content Security Policy. Error messages in plain English help people who are not technical.
+
+**Alternatives considered.** Astro with React components. It is good for content, but TanStack Start also supports server functions if consultation forms move in-house later.
+
+### D-34. How the builder works
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- A pane on the left lists the sections. Each section shows a status: complete, required fields missing, optional, or not applicable.
+- The centre shows the fields of the selected section. A live preview shows the submission as a club sees it.
+- The export button stays disabled until the document is valid, and it lists the missing items.
+- The builder hides fields that do not apply, and shows a short note that gives the reason.
+- The builder calculates `is_minor`. A minor has a clear badge and a safeguarding notice.
+- The builder never changes a choice of the user without permission. It shows a conflict on the related fields, with a fix that the user can select.
+- If a change hides a field that has a value, the builder keeps the value until the user confirms.
+- Each value has a source selector. The default is the sender.
+- `fpds-ts` gives the state of each field: required, optional, not applicable or calculated. The builder contains no rules of its own. A test makes sure that the field states agree with the validator for each conformance case.
+
+**Reason.** Conditional fields are the most difficult part of FPDS for a person to understand. One source for the rules prevents a difference between the builder and the schema.
+
+**Alternatives considered.** Show all fields and validate at export. Users then make errors that the builder can prevent.
+
+### D-35. A submission travels as a file
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- The builder exports a file that ends with `.fpds.json`. The sender attaches the file to an email or a message.
+- The viewer at `fpds.football/view` opens a file in the browser. It shows the sources of values, a badge for minors and warnings.
+- The viewer has a print layout, so a club can save a PDF for internal use.
+- The viewer can open a file in the builder. A change then gives the document a new `submission_id` (D-31).
+- There are no share links. This is open question OQ-25.
+
+**Reason.** A link must keep the data on a server or put the data in the URL. A URL with player data stays in browser history, chat logs and link previews. People already understand a file attachment as a document.
+
+**Alternatives considered.** A share link with the document encoded in the URL.
+
+### D-36. Unfinished work in the builder
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- The builder saves work automatically in session storage. The browser deletes it when the tab closes.
+- "Save draft" downloads a file that ends with `.fpds-draft.json`. The file contains a draft marker. The viewer does not show a draft as a submission.
+- The builder does not keep data in the browser after the tab closes.
+- A "Clear everything" button is always visible.
+
+**Reason.** Agents stop and start their work. Data about players, often minors, must not stay on a shared computer. A draft file must never look like a valid submission.
+
+**Alternatives considered.** Local storage that stays after the tab closes. Export of invalid documents with a warning.
+
+### D-37. How the viewer shows problems
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- If a file is not valid against the schema, or breaks a rule in §13.1, the viewer shows the submission with a red "Not a valid FPDS submission" banner and a list of the problems in plain English.
+- If `is_minor` does not agree with the date of birth, the viewer also shows the calculated value.
+- The viewer shows unrecognised extensions in a closed section with their prefix, and without source marks.
+- The viewer does not show the fields of an unsupported version, a draft file, or a file that is not FPDS. It gives the reason.
+- Each rendered submission has this note: "FPDS checks the structure of this file. It does not check that the information is true."
+- The viewer never shows a badge such as "Verified by FPDS".
+
+**Reason.** Clubs receive files from many producers. A flawed file still has value, but it must never look conforming. For minors, safeguarding is more important than the value in the file.
+
+**Alternatives considered.** Refuse all invalid files. Clubs then lose useful information because of small errors.
+
+### D-38. Specification changes for the tools
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- §13 defines a producer and gives a checklist of steps for a conforming producer.
+- §11 no longer refers to a sender who types a submission by hand.
+- §13.1 adds rule 5: `secondary_positions` does not contain the primary position.
+- §3 states that a document is UTF-8 JSON with the media type `application/json`, and that a file name SHOULD end with `.fpds.json`.
+- §14 adds OQ-24 and OQ-25.
+- `README.md` has a section: "How do I create an FPDS-conforming document?"
+
+**Reason.** An agent first asks how to make a document that conforms. The specification did not answer. The builder prevents a secondary position that repeats the primary position, so the specification must agree. JSON Schema can express that rule only with sixteen conditions, so it is in §13.1. A file name that people recognise helps in email and messages. It is not a MUST, because FPDS does not define transport.
+
+**Alternatives considered.** "Compliant" in place of "conforming". §13 already defines "conforming", and one word has one meaning.

@@ -9,6 +9,66 @@
       "valid": true
     },
     {
+      "description": "a version 4 UUID is accepted",
+      "patch": [],
+      "valid": true
+    },
+    {
+      "description": "a version 7 UUID is accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/submission_id",
+          "value": "01928f3a-7b2c-7d4e-9f10-2a3b4c5d6e7f"
+        }
+      ],
+      "valid": true
+    },
+    {
+      "description": "a submission ID that is not a UUID is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/submission_id",
+          "value": "SUB-2026-001"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "an uppercase UUID is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/submission_id",
+          "value": "B7F3C2E1-4A9D-4F11-9C3E-2A1D5F8B0C44"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "a UUID without hyphens is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/submission_id",
+          "value": "b7f3c2e14a9d4f119c3e2a1d5f8b0c44"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "description": "the nil UUID is rejected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/submission/submission_id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "valid": false
+    },
+    {
       "description": "an empty purposes array is rejected",
       "patch": [
         {

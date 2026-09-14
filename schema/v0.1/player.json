@@ -30,7 +30,8 @@
       "properties": {
         "submission_id": {
           "type": "string",
-          "minLength": 1
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+          "$comment": "SPEC section 4.3: a lowercase RFC 9562 UUID. Version 4 or 7 is recommended."
         },
         "submitted_at": {
           "$ref": "#/$defs/dateTime"

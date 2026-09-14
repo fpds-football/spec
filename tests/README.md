@@ -64,6 +64,7 @@ The suite tests only what JSON Schema can express. §13.1 of `SPEC.md` lists the
 2. In a `YYYY/YY` season, the second part is the year after the first part.
 3. Each key in `provenance` resolves to a value in the same document.
 4. `extensions` contains no diagnoses, injury details or medical history.
+5. `positions.secondary_positions` does not contain the primary position.
 
 These rules belong in the test suites of implementations. If many implementations make the same checks, that is a reason to find a way to put the checks in the schema.
 
