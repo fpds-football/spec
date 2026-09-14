@@ -704,3 +704,14 @@ D-41 later reduced the published paths to the schema only.
 **Reason.** The ideas on each page start the discussion. They are not the only possible answers, and a fixed list hides the answers that nobody proposed. One form is easier to maintain than one form for each consultation, and a new consultation needs no new form. A fixed role and an optional closest idea keep the counts that the summary publishes. Name and email address are optional, because some respondents do not answer a commercially sensitive question with their name.
 
 **Alternatives considered.** One form for each consultation, with a fixed answer. Each new consultation then needs a new form, and questions that are specific to one consultation are lost when the form is reused. A required name. It reduces answers to the wage and release clause questions. A free-text role. The summary then cannot count answers by role without manual work.
+
+### D-45. The consultation form does not ask for the closest idea
+
+- **Date:** 2026-09-14
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** The consultation form does not ask which idea is closest to the view of the respondent. The answer is free text only. The summary counts answers by role. This entry changes one part of D-44.
+
+**Reason.** The ideas on a consultation page start the discussion. A question that asks respondents to choose one of them makes the ideas a closed list again, which D-44 removed. The summary reports the main arguments from the free-text answers.
+
+**Alternatives considered.** Keep the optional closest-idea question from D-44. It gives a count for each idea, but it pushes respondents towards the ideas on the page.
