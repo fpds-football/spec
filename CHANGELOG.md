@@ -18,7 +18,7 @@ The first public draft, version 0.1.0. It is not stable. Breaking changes are ex
 
 ### Added
 
-- A player submission document with eleven top-level members. Six members are required, and `representation` is required when the sender is an intermediary.
+- A player submission document with eleven top-level members. §1 states that user interfaces call a submission a player profile. Six members are required, and `representation` is required when the sender is an intermediary.
 - A `submission` block with `submission_id`, `submitted_at`, `purposes` and `sender`.
 - `submission_id`, a lowercase UUID. Each version of a document has its own ID, so a receiver can recognise a repeated or forwarded copy.
 - A checklist in §13 for conforming producers, and a recommended file name ending `.fpds.json`.

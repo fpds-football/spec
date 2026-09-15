@@ -85,6 +85,7 @@ All prose uses Simple English (ASD-STE100, pragmatic mode). Use the `simple-engl
 
 - Keep RFC 2119 keywords in capitals: `MUST`, `SHOULD`, `MAY`. Do not use "should", "may", "might", "could" or "would" in lowercase.
 - Use British spelling.
+- Text for people, such as the website, the README introduction and posts, says "player profile". `SPEC.md` and the schema say "submission" (D-46).
 - Write descriptions with a maximum of 25 words in each sentence. Write instructions with a maximum of 20 words.
 - Do not use semicolons or contractions.
 - Put normative statements in `SPEC.md`. Put reasons in `DECISIONS.md`. Put opinion in a Discussion.

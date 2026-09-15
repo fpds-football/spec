@@ -715,3 +715,19 @@ D-41 later reduced the published paths to the schema only.
 **Reason.** The ideas on a consultation page start the discussion. A question that asks respondents to choose one of them makes the ideas a closed list again, which D-44 removed. The summary reports the main arguments from the free-text answers.
 
 **Alternatives considered.** Keep the optional closest-idea question from D-44. It gives a count for each idea, but it pushes respondents towards the ideas on the page.
+
+### D-46. "Player profile" is the name for people
+
+- **Date:** 2026-09-15
+- **Status:** Pre-release, maintainer decision
+
+**Decision.**
+
+- Text for people calls the document a "player profile" or a "profile". This includes the website, the builder, the viewer, the consultation pages, the README introduction and posts.
+- The identifier of a version is the "file ID" in text for people.
+- `SPEC.md`, the schema, `fpds-ts` and code keep "submission". The `submission` object, `submission_id` and the schema title do not change.
+- §1 of `SPEC.md` states that people call a submission a player profile.
+
+**Reason.** Agents, scouts and club staff talk about sending the profile of a player. "Submission" sounds technical, and it is not a word that they use. A rename in the schema breaks the schema, the library, the site and the conformance suite, and nobody who uses the website sees schema names. A specification needs one exact term, so it keeps the term that it defines.
+
+**Alternatives considered.** "Transfer of player data". "Transfer" already has a meaning in football, and "transfer of personal data" has a legal meaning in the GDPR. It also names an action, not a file. "Player offer". A profile with the purpose `information_only` does not offer the player. A rename of the schema fields. It breaks all implementations for a word that users do not see.

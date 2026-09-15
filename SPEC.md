@@ -10,6 +10,8 @@ In this document, the key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY have 
 
 FPDS defines the structure of a **player submission**. A player submission is one document about one player. One party sends it to another party about a possible permanent transfer, loan or trial.
 
+People who send and receive submissions usually call them player profiles. User interfaces and the FPDS website use the name "player profile". This specification and the schema use "submission".
+
 The sender is an intermediary or the player. §4 defines the two senders.
 
 FPDS does not define transport, authentication, sessions or acknowledgements. It is a data standard, not a protocol.

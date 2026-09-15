@@ -8,7 +8,7 @@ FPDS is an open format for player information that agents, intermediaries, playe
 
 ## The problem
 
-Player submissions travel between parties as free text, with no agreed structure and no sources:
+Player profiles travel between parties as free text, with no agreed structure and no sources:
 
 > Good lad, played in X league, 10 goals, plays centre mid, available now.
 
@@ -20,11 +20,11 @@ This message does not answer the questions that a club needs to ask:
 - Does the sender have a mandate to offer the player?
 - Who says so?
 
-Each recruitment department finds this information by hand, hundreds of times in each transfer window. FPDS gives a submission a structure that answers these questions.
+Each recruitment department finds this information by hand, hundreds of times in each transfer window. FPDS gives a player profile a structure that answers these questions.
 
 ## What FPDS is
 
-FPDS is a JSON Schema for one player submission. The core is small on purpose. It contains:
+FPDS is a JSON Schema for one player profile. The specification calls this document a **submission**. The core is small on purpose. It contains:
 
 - **Submission.** Who sends it, when, and for which types of deal.
 - **Identity.** Name, date of birth, nationalities and the FIFA Connect identifier.
