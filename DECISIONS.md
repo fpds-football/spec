@@ -76,7 +76,7 @@ Each entry has an ID, a date, a status, the decision, the reason, and the altern
 ### D-6. The 14-day rule starts at the first tag
 
 - **Date:** 2026-09-14
-- **Status:** Pre-release, maintainer decision
+- **Status:** Pre-release, maintainer decision. D-47 changes the 14 days to 28 days.
 
 **Decision.** Before `v0.1.0`, the maintainer can change the draft directly. After `v0.1.0`, every schema change needs a consultation that stays open for at least 14 days. A consultation is the website page, the form and the GitHub Discussion together (see D-25). This file records every decision, and pre-release decisions carry their own label.
 
@@ -380,7 +380,7 @@ D-38 later added a rule about secondary positions. D-39 later removed the medica
 ### D-26. Three consultations at launch
 
 - **Date:** 2026-09-14
-- **Status:** Pre-release, maintainer decision
+- **Status:** Pre-release, maintainer decision. D-47 changes the 14 days to 28 days.
 
 **Decision.** Three consultations open at launch:
 
@@ -731,3 +731,14 @@ D-41 later reduced the published paths to the schema only.
 **Reason.** Agents, scouts and club staff talk about sending the profile of a player. "Submission" sounds technical, and it is not a word that they use. A rename in the schema breaks the schema, the library, the site and the conformance suite, and nobody who uses the website sees schema names. A specification needs one exact term, so it keeps the term that it defines.
 
 **Alternatives considered.** "Transfer of player data". "Transfer" already has a meaning in football, and "transfer of personal data" has a legal meaning in the GDPR. It also names an action, not a file. "Player offer". A profile with the purpose `information_only` does not offer the player. A rename of the schema fields. It breaks all implementations for a word that users do not see.
+
+### D-47. A consultation stays open for at least 28 days
+
+- **Date:** 2026-09-18
+- **Status:** Pre-release, maintainer decision
+
+**Decision.** A consultation stays open for at least 28 days, not 14 days. This applies to the proposals of the maintainer in the same way. The rule still starts at the first tag (D-6). A new consultation still opens every two to three weeks (D-26), so more than one consultation is open at the same time.
+
+**Reason.** FFAR Online, which reaches a large number of agents, advised that 14 days is too short for this audience. An agent reads a post, opens the page some days later, and answers when there is time between transfers. A window that closes before the post finishes its circulation gives a low response rate, and a low response rate gives weak evidence for a decision. A longer window costs the specification little, because consultations overlap.
+
+**Alternatives considered.** Keep 14 days as the minimum and extend a consultation when the response rate is low. The published length then changes during the consultation, and a person who answers late cannot know if the consultation is still open. A minimum of 21 days. It is longer, but it still closes inside one month, and organisations that post about FPDS work to a monthly rhythm.

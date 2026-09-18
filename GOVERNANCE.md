@@ -32,10 +32,10 @@ After `v0.1.0`, every schema change needs a consultation. A consultation has thr
 
 These rules apply:
 
-- A consultation stays open for at least 14 days before a schema change lands.
+- A consultation stays open for at least 28 days before a schema change lands.
 - The summary states the number of responses from each role, the main arguments and the decision with its reasons. The summary is anonymous by default.
 - A change that makes a field required, removes a field or changes the type of a field needs a stated reason in `DECISIONS.md`.
-- The proposals of the maintainer get the same 14 days and the same public process.
+- The proposals of the maintainer get the same 28 days and the same public process.
 - If an objection gets no answer, the summary records it. The maintainer does not delete it.
 
 Social media posts can bring people to a consultation. The consultation page and the GitHub Discussion are the record. The maintainer copies relevant points from other channels into the record.

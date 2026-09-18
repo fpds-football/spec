@@ -80,7 +80,7 @@ CI runs the same checks on each push. If a schema change does not change any tes
 
 Do not add an `examples/invalid/` folder. The conformance cases are the invalid examples.
 
-After `v0.1.0`, a schema change lands only after a consultation of at least 14 days. [`GOVERNANCE.md`](GOVERNANCE.md) describes the process.
+After `v0.1.0`, a schema change lands only after a consultation of at least 28 days. [`GOVERNANCE.md`](GOVERNANCE.md) describes the process.
 
 ## Writing style
 
@@ -153,7 +153,7 @@ For each consultation:
 2. Duplicate the Tally template form, and add the questions for the consultation. Put the form ID in the consultation entry.
 3. Open a GitHub Discussion that links to the ID in §14 of `SPEC.md`.
 4. Change the "Consultation" column in §14 to a link to the page.
-5. Keep the consultation open for at least 14 days.
+5. Keep the consultation open for at least 28 days.
 6. Publish the summary on the page and in the Discussion.
 7. Record the decision in `DECISIONS.md`.
 

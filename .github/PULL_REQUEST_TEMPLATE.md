@@ -25,6 +25,6 @@
 
 <!--
 Link the consultation or Discussion for this change, with its ID from §14 of SPEC.md.
-After v0.1.0, a schema change needs a consultation that is open for at least 14 days.
+After v0.1.0, a schema change needs a consultation that is open for at least 28 days.
 A change to text only does not need a consultation.
 -->

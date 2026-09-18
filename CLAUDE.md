@@ -16,7 +16,7 @@ This repository is the specification for the Football Player Data Standard. It i
 
 **Record each decision in `DECISIONS.md`.** Give the decision, the reason, the alternatives and the date. Do not reuse or renumber IDs. If a decision replaces an entry, change the status of the old entry to "Superseded by D-n".
 
-**Before `v0.1.0`, the maintainer can change the draft directly. After `v0.1.0`, a schema change needs a consultation that is open for at least 14 days.** `GOVERNANCE.md` describes the process.
+**Before `v0.1.0`, the maintainer can change the draft directly. After `v0.1.0`, a schema change needs a consultation that is open for at least 28 days (D-47).** `GOVERNANCE.md` describes the process.
 
 ## Commands
 
