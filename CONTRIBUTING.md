@@ -149,8 +149,8 @@ Before launch, send a test message to each address.
 
 For each consultation:
 
-1. In `fpds-football/site`, add the consultation to `src/content/consultations.ts`, in Simple English, with no JSON.
-2. Duplicate the Tally template form, and add the questions for the consultation. Put the form ID in the consultation entry.
+1. In `fpds-football/site`, add the consultation to `src/content/consultations.ts`, in Simple English, with no JSON. Add a small route file in `src/routes/consult/`.
+2. Do not make a new form. All consultations use one Tally form (D-44). The page sends the slug of the consultation in the hidden field `consultation`. The answer is free text (D-45).
 3. Open a GitHub Discussion that links to the ID in §14 of `SPEC.md`.
 4. Change the "Consultation" column in §14 to a link to the page.
 5. Keep the consultation open for at least 28 days.

@@ -365,7 +365,7 @@ D-38 later added a rule about secondary positions. D-39 later removed the medica
 ### D-25. Consultation has two layers
 
 - **Date:** 2026-09-14
-- **Status:** Pre-release, maintainer decision
+- **Status:** Pre-release, maintainer decision. D-44 and D-45 change the form that this entry describes.
 
 **Decision.**
 
